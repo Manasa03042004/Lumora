@@ -1,0 +1,635 @@
+{% extends "base.html" %}
+
+{% block title %}Lumora — Energy Reset{% endblock %}
+
+
+{% block content %}
+
+<section class="exercise-page tired-page">
+
+    <a href="{{ url_for('reset') }}" class="back-link">
+        ← Back to reset center
+    </a>
+
+
+    <div class="tired-layout">
+
+
+        <!-- LEFT SIDE: GUIDE -->
+
+        <div class="avatar-panel">
+
+            <div class="avatar-glow"></div>
+
+
+            <div id="guide-message" class="guide-message">
+                Ready to wake up?
+            </div>
+
+
+            <!-- AVATAR -->
+
+            <div id="avatar" class="wellness-avatar">
+
+                <!-- HEAD -->
+
+                <div class="avatar-head">
+
+                    <div class="avatar-hair"></div>
+
+                    <div class="avatar-face">
+
+                        <span class="avatar-eye left-eye"></span>
+                        <span class="avatar-eye right-eye"></span>
+
+                        <span class="avatar-mouth"></span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BODY -->
+
+                <div class="avatar-body">
+
+                    <!-- LEFT ARM -->
+
+                    <div
+                        id="left-arm"
+                        class="avatar-arm avatar-left-arm"
+                    ></div>
+
+
+                    <!-- BODY CORE -->
+
+                    <div class="avatar-torso"></div>
+
+
+                    <!-- RIGHT ARM -->
+
+                    <div
+                        id="right-arm"
+                        class="avatar-arm avatar-right-arm"
+                    ></div>
+
+                </div>
+
+
+                <!-- LEGS -->
+
+                <div class="avatar-legs">
+
+                    <div class="avatar-leg"></div>
+
+                    <div class="avatar-leg"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="movement-arrows">
+
+                <span id="arrow-left">←</span>
+
+                <span id="arrow-up">↑</span>
+
+                <span id="arrow-right">→</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE: GUIDANCE -->
+
+        <div class="tired-content">
+
+
+            <p class="cosmic-eyebrow">
+                3 MINUTE ENERGY RESET
+            </p>
+
+
+            <h1>
+                Let's wake up gently.
+            </h1>
+
+
+            <p class="exercise-intro">
+                You don't need more pressure.
+                <br>
+                Let's wake your body up one step at a time.
+            </p>
+
+
+            <!-- TIMER -->
+
+            <div
+                id="timer"
+                class="exercise-timer"
+            >
+                03:00
+            </div>
+
+
+            <!-- STEP CARD -->
+
+            <div class="exercise-step tired-step-card">
+
+                <p class="step-label">
+                    FOLLOW ALONG
+                </p>
+
+
+                <h2 id="step-title">
+                    Get comfortable
+                </h2>
+
+
+                <p id="step-description">
+                    Sit or stand comfortably.
+                    We're going to gently wake up your body.
+                </p>
+
+            </div>
+
+
+            <!-- PROGRESS -->
+
+            <div class="energy-progress">
+
+                <div
+                    id="progress-fill"
+                    class="energy-progress-fill"
+                ></div>
+
+            </div>
+
+
+            <p
+                id="progress-text"
+                class="progress-text"
+            >
+                Step 1 of 5
+            </p>
+
+
+            <!-- CONTROLS -->
+
+            <div class="exercise-controls">
+
+                <button
+                    id="start-button"
+                    class="exercise-button"
+                    onclick="startTiredReset()"
+                >
+                    Begin
+                    <span>→</span>
+                </button>
+
+
+                <button
+                    id="pause-button"
+                    class="exercise-secondary-button"
+                    onclick="togglePause()"
+                    style="display: none;"
+                >
+                    Pause
+                </button>
+
+            </div>
+
+
+            <p class="exercise-note">
+                ✦ Follow only the movements that feel comfortable.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+
+let totalSeconds = 180;
+
+let remainingSeconds = totalSeconds;
+
+let timerInterval = null;
+
+let running = false;
+
+let paused = false;
+
+
+/* =========================
+   FORMAT TIME
+========================= */
+
+function formatTime(seconds) {
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    const secondsLeft =
+        seconds % 60;
+
+    return (
+        String(minutes).padStart(2, "0")
+        + ":" +
+        String(secondsLeft).padStart(2, "0")
+    );
+
+}
+
+
+/* =========================
+   UPDATE TIMER
+========================= */
+
+function updateTimer() {
+
+    document.getElementById("timer").textContent =
+        formatTime(remainingSeconds);
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+function startTiredReset() {
+
+    if (running) {
+        return;
+    }
+
+    running = true;
+
+    paused = false;
+
+
+    document.getElementById("start-button").style.display =
+        "none";
+
+
+    document.getElementById("pause-button").style.display =
+        "inline-flex";
+
+
+    updateTiredStep();
+
+
+    timerInterval =
+        setInterval(function () {
+
+            if (paused) {
+                return;
+            }
+
+
+            remainingSeconds--;
+
+
+            updateTimer();
+
+
+            updateTiredStep();
+
+
+            if (remainingSeconds <= 0) {
+
+                clearInterval(timerInterval);
+
+                finishTiredReset();
+
+            }
+
+        }, 1000);
+
+}
+
+
+/* =========================
+   PAUSE / RESUME
+========================= */
+
+function togglePause() {
+
+    const pauseButton =
+        document.getElementById("pause-button");
+
+
+    if (!paused) {
+
+        paused = true;
+
+        pauseButton.textContent =
+            "Resume";
+
+
+        document.getElementById("guide-message").textContent =
+            "Take your time ✦";
+
+
+        document.getElementById("step-title").textContent =
+            "Paused";
+
+
+        document.getElementById("step-description").textContent =
+            "Rest for as long as you need. Resume whenever you're ready.";
+
+
+        document.getElementById("avatar").className =
+            "wellness-avatar";
+
+    }
+
+    else {
+
+        paused = false;
+
+        pauseButton.textContent =
+            "Pause";
+
+        updateTiredStep();
+
+    }
+
+}
+
+
+/* =========================
+   RESET AVATAR
+========================= */
+
+function resetAvatarAnimation() {
+
+    const avatar =
+        document.getElementById("avatar");
+
+    avatar.className =
+        "wellness-avatar";
+
+}
+
+
+/* =========================
+   UPDATE GUIDED STEPS
+========================= */
+
+function updateTiredStep() {
+
+    const elapsed =
+        totalSeconds - remainingSeconds;
+
+
+    const title =
+        document.getElementById("step-title");
+
+
+    const description =
+        document.getElementById("step-description");
+
+
+    const guideMessage =
+        document.getElementById("guide-message");
+
+
+    const avatar =
+        document.getElementById("avatar");
+
+
+    const progressFill =
+        document.getElementById("progress-fill");
+
+
+    const progressText =
+        document.getElementById("progress-text");
+
+
+    resetAvatarAnimation();
+
+
+    /* =====================
+       STEP 1
+       0–30 SECONDS
+       STRETCH
+    ====================== */
+
+    if (elapsed < 30) {
+
+        title.textContent =
+            "Reach up and stretch.";
+
+        description.textContent =
+            "Slowly lift both arms overhead. Reach up, breathe naturally, and relax.";
+
+        guideMessage.textContent =
+            "Reach up ↑";
+
+        avatar.classList.add(
+            "avatar-stretch"
+        );
+
+        progressFill.style.width =
+            "20%";
+
+        progressText.textContent =
+            "Step 1 of 5 · Stretch";
+
+    }
+
+
+    /* =====================
+       STEP 2
+       30–65 SECONDS
+       SHOULDERS
+    ====================== */
+
+    else if (elapsed < 65) {
+
+        title.textContent =
+            "Roll your shoulders.";
+
+        description.textContent =
+            "Roll your shoulders back slowly. Let them drop and relax.";
+
+        guideMessage.textContent =
+            "Roll back ↻";
+
+        avatar.classList.add(
+            "avatar-shoulders"
+        );
+
+        progressFill.style.width =
+            "40%";
+
+        progressText.textContent =
+            "Step 2 of 5 · Release";
+
+    }
+
+
+    /* =====================
+       STEP 3
+       65–100 SECONDS
+       NECK
+    ====================== */
+
+    else if (elapsed < 100) {
+
+        title.textContent =
+            "Gently look side to side.";
+
+        description.textContent =
+            "Turn your head slowly to the left, return to center, then gently look right.";
+
+        guideMessage.textContent =
+            "Left  ·  Center  ·  Right";
+
+        avatar.classList.add(
+            "avatar-neck"
+        );
+
+        progressFill.style.width =
+            "60%";
+
+        progressText.textContent =
+            "Step 3 of 5 · Reset your neck";
+
+    }
+
+
+    /* =====================
+       STEP 4
+       100–140 SECONDS
+       WAKE UP
+    ====================== */
+
+    else if (elapsed < 140) {
+
+        title.textContent =
+            "Wake up your body.";
+
+        description.textContent =
+            "Shake out your hands and loosen your arms. Add a little movement.";
+
+        guideMessage.textContent =
+            "Shake it out ✦";
+
+        avatar.classList.add(
+            "avatar-shake"
+        );
+
+        progressFill.style.width =
+            "80%";
+
+        progressText.textContent =
+            "Step 4 of 5 · Wake up";
+
+    }
+
+
+    /* =====================
+       STEP 5
+       140–180 SECONDS
+       ENERGY FINISH
+    ====================== */
+
+    else {
+
+        title.textContent =
+            "One final energizing stretch.";
+
+        description.textContent =
+            "Stand tall, open your chest, lift your arms and get ready for your next step.";
+
+        guideMessage.textContent =
+            "You've got this ✦";
+
+        avatar.classList.add(
+            "avatar-finish"
+        );
+
+        progressFill.style.width =
+            "100%";
+
+        progressText.textContent =
+            "Step 5 of 5 · Ready";
+
+    }
+
+}
+
+
+/* =========================
+   FINISH
+========================= */
+
+function finishTiredReset() {
+
+    running = false;
+
+    paused = false;
+
+
+    document.getElementById("pause-button").style.display =
+        "none";
+
+
+    document.getElementById("avatar").className =
+        "wellness-avatar avatar-finish";
+
+
+    document.getElementById("guide-message").textContent =
+        "A little more awake ✦";
+
+
+    document.getElementById("step-title").textContent =
+        "You're ready for one small step.";
+
+
+    document.getElementById("step-description").textContent =
+        "You don't have to feel completely energized. Just begin with one small thing.";
+
+
+    document.getElementById("timer").textContent =
+        "Complete";
+
+
+    const button =
+        document.getElementById("start-button");
+
+
+    button.style.display =
+        "inline-flex";
+
+
+    button.innerHTML =
+        "Return to Reset Center →";
+
+
+    button.onclick =
+        function () {
+
+            window.location.href =
+                "{{ url_for('reset') }}";
+
+        };
+
+}
+
+</script>
+
+{% endblock %}

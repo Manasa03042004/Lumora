@@ -1,0 +1,1086 @@
+{% extends "base.html" %}
+
+{% block title %}Lumora — Pomodoro{% endblock %}
+
+{% block content %}
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .pomodoro-page {
+        min-height: 100vh;
+        padding: 35px 6% 70px;
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Background glow */
+
+    .pomodoro-page::before {
+        content: "";
+        position: fixed;
+        width: 450px;
+        height: 450px;
+        border-radius: 50%;
+        background: rgba(154, 88, 255, 0.15);
+        filter: blur(110px);
+        top: -150px;
+        right: -120px;
+        pointer-events: none;
+    }
+
+    .pomodoro-page::after {
+        content: "";
+        position: fixed;
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        background: rgba(255, 140, 185, 0.09);
+        filter: blur(120px);
+        bottom: -180px;
+        left: -130px;
+        pointer-events: none;
+    }
+
+    /* Navigation */
+
+    .pomodoro-nav {
+        max-width: 1100px;
+        margin: 0 auto 45px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .pomodoro-back {
+        color: rgba(255, 255, 255, 0.65);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: 0.25s ease;
+    }
+
+    .pomodoro-back:hover {
+        color: #ffffff;
+        transform: translateX(-4px);
+    }
+
+    .pomodoro-logo {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    /* Main layout */
+
+    .pomodoro-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+
+    .pomodoro-heading {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .pomodoro-eyebrow {
+        color: #d6adff;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+        margin-bottom: 12px;
+    }
+
+    .pomodoro-heading h1 {
+        margin: 0;
+        font-size: clamp(2.2rem, 5vw, 4rem);
+        letter-spacing: -1.5px;
+    }
+
+    .pomodoro-heading h1 span {
+        color: #e1b5ff;
+    }
+
+    .pomodoro-heading p {
+        margin: 14px auto 0;
+        max-width: 550px;
+        color: rgba(255, 255, 255, 0.58);
+        line-height: 1.6;
+    }
+
+    /* Timer area */
+
+    .timer-section {
+        display: grid;
+        grid-template-columns: 1fr 0.85fr;
+        gap: 25px;
+        align-items: stretch;
+    }
+
+    .timer-card,
+    .settings-card {
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.035);
+        border-radius: 28px;
+        padding: 35px;
+        backdrop-filter: blur(15px);
+    }
+
+    /* Timer card */
+
+    .timer-card {
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .timer-card::before {
+        content: "";
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        background: rgba(160, 91, 255, 0.13);
+        filter: blur(50px);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    .timer-status {
+        position: relative;
+        z-index: 1;
+        color: #dcb4ff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        margin-bottom: 28px;
+    }
+
+    .timer-ring {
+        width: min(300px, 75vw);
+        height: min(300px, 75vw);
+        margin: 0 auto 28px;
+        border-radius: 50%;
+        padding: 10px;
+        background: conic-gradient(
+            #b978ff 0deg,
+            rgba(255, 255, 255, 0.08) 0deg
+        );
+        display: grid;
+        place-items: center;
+        transition: background 0.3s linear;
+        position: relative;
+        z-index: 1;
+    }
+
+    .timer-inner {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: #170c28;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .timer-display {
+        font-size: clamp(3.2rem, 9vw, 5.5rem);
+        font-weight: 700;
+        letter-spacing: -3px;
+        line-height: 1;
+    }
+
+    .timer-label {
+        margin-top: 10px;
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.85rem;
+    }
+
+    /* Controls */
+
+    .timer-controls {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .timer-btn {
+        border: none;
+        border-radius: 14px;
+        padding: 13px 21px;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.25s ease;
+    }
+
+    .start-btn {
+        color: #ffffff;
+        background: linear-gradient(
+            135deg,
+            #8d50e9,
+            #bb7bff
+        );
+        box-shadow: 0 10px 28px rgba(137, 72, 230, 0.28);
+    }
+
+    .start-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .pause-btn {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.10);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .reset-btn {
+        color: rgba(255, 255, 255, 0.65);
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+    }
+
+    .timer-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Settings */
+
+    .settings-card h2 {
+        margin: 0 0 8px;
+        font-size: 1.4rem;
+    }
+
+    .settings-card > p {
+        margin: 0 0 25px;
+        color: rgba(255, 255, 255, 0.48);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .setting-group {
+        margin-bottom: 22px;
+    }
+
+    .setting-label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.68);
+        letter-spacing: 1px;
+    }
+
+    .duration-options {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .duration-btn {
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.045);
+        color: rgba(255, 255, 255, 0.65);
+        padding: 9px 13px;
+        border-radius: 11px;
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.82rem;
+        transition: 0.2s ease;
+    }
+
+    .duration-btn:hover,
+    .duration-btn.active {
+        background: rgba(175, 106, 255, 0.20);
+        border-color: rgba(202, 151, 255, 0.45);
+        color: #ffffff;
+    }
+
+    .custom-input {
+        width: 100%;
+        margin-top: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.045);
+        color: #ffffff;
+        outline: none;
+        font: inherit;
+    }
+
+    .custom-input:focus {
+        border-color: rgba(203, 150, 255, 0.6);
+    }
+
+    .task-input {
+        width: 100%;
+        padding: 14px;
+        border-radius: 13px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.045);
+        color: #ffffff;
+        outline: none;
+        font: inherit;
+    }
+
+    .task-input::placeholder,
+    .custom-input::placeholder {
+        color: rgba(255, 255, 255, 0.28);
+    }
+
+    /* Session message */
+
+    .session-message {
+        margin-top: 25px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.58);
+        font-size: 0.88rem;
+        min-height: 25px;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 800px) {
+
+        .timer-section {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+    @media (max-width: 600px) {
+
+        .pomodoro-page {
+            padding: 25px 5% 50px;
+        }
+
+        .pomodoro-nav {
+            margin-bottom: 35px;
+        }
+
+        .pomodoro-logo {
+            display: none;
+        }
+
+        .timer-card,
+        .settings-card {
+            padding: 25px 18px;
+        }
+
+    }
+
+</style>
+
+
+<section class="pomodoro-page">
+
+    <!-- Navigation -->
+
+    <nav class="pomodoro-nav">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="pomodoro-back"
+        >
+            ← Back to your space
+        </a>
+
+        <a
+            href="{{ url_for('home') }}"
+            class="pomodoro-logo"
+        >
+            ✦ LUMORA
+        </a>
+
+    </nav>
+
+
+    <main class="pomodoro-container">
+
+
+        <!-- Heading -->
+
+        <section class="pomodoro-heading">
+
+            <p class="pomodoro-eyebrow">
+                FOCUS WITH INTENTION
+            </p>
+
+            <h1>
+                Your <span>Focus Space 🍅</span>
+            </h1>
+
+            <p>
+                Give your attention one thing at a time.
+                Focus, pause, breathe and begin again.
+            </p>
+
+        </section>
+
+
+        <!-- Timer + Settings -->
+
+        <section class="timer-section">
+
+
+            <!-- Timer -->
+
+            <div class="timer-card">
+
+                <div
+                    class="timer-status"
+                    id="timer-status"
+                >
+                    READY TO FOCUS
+                </div>
+
+
+                <div
+                    class="timer-ring"
+                    id="timer-ring"
+                >
+
+                    <div class="timer-inner">
+
+                        <div
+                            class="timer-display"
+                            id="timer-display"
+                        >
+                            25:00
+                        </div>
+
+                        <div
+                            class="timer-label"
+                            id="timer-label"
+                        >
+                            Focus time
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="timer-controls">
+
+                    <button
+                        type="button"
+                        class="timer-btn start-btn"
+                        id="start-btn"
+                    >
+                        ▶ Start
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="timer-btn pause-btn"
+                        id="pause-btn"
+                    >
+                        ⏸ Pause
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="timer-btn reset-btn"
+                        id="reset-btn"
+                    >
+                        ↻ Reset
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="session-message"
+                    id="session-message"
+                >
+                    Choose your session and begin when you're ready ✦
+                </div>
+
+            </div>
+
+
+            <!-- Settings -->
+
+            <div class="settings-card">
+
+                <h2>
+                    Set your session
+                </h2>
+
+                <p>
+                    Make this little focus session work for you.
+                </p>
+
+
+                <!-- Focus duration -->
+
+                <div class="setting-group">
+
+                    <span class="setting-label">
+                        FOCUS DURATION
+                    </span>
+
+                    <div
+                        class="duration-options"
+                        id="focus-options"
+                    >
+
+                        <button
+                            type="button"
+                            class="duration-btn active"
+                            data-minutes="25"
+                        >
+                            25 min
+                        </button>
+
+                        <button
+                            type="button"
+                            class="duration-btn"
+                            data-minutes="45"
+                        >
+                            45 min
+                        </button>
+
+                        <button
+                            type="button"
+                            class="duration-btn"
+                            data-minutes="60"
+                        >
+                            60 min
+                        </button>
+
+                    </div>
+
+                    <input
+                        type="number"
+                        id="custom-focus"
+                        class="custom-input"
+                        min="1"
+                        max="180"
+                        placeholder="Or enter custom minutes"
+                    >
+
+                </div>
+
+
+                <!-- Break duration -->
+
+                <div class="setting-group">
+
+                    <span class="setting-label">
+                        BREAK DURATION
+                    </span>
+
+                    <div
+                        class="duration-options"
+                        id="break-options"
+                    >
+
+                        <button
+                            type="button"
+                            class="duration-btn active"
+                            data-minutes="5"
+                        >
+                            5 min
+                        </button>
+
+                        <button
+                            type="button"
+                            class="duration-btn"
+                            data-minutes="10"
+                        >
+                            10 min
+                        </button>
+
+                        <button
+                            type="button"
+                            class="duration-btn"
+                            data-minutes="15"
+                        >
+                            15 min
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Task -->
+
+                <div class="setting-group">
+
+                    <label
+                        for="task-input"
+                        class="setting-label"
+                    >
+                        WHAT ARE YOU FOCUSING ON?
+                    </label>
+
+                    <input
+                        type="text"
+                        id="task-input"
+                        class="task-input"
+                        placeholder="Example: Finish Module 3 notes"
+                    >
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+</section>
+
+
+<script>
+
+    // =========================
+    // ELEMENTS
+    // =========================
+
+    const timerDisplay =
+        document.getElementById("timer-display");
+
+    const timerRing =
+        document.getElementById("timer-ring");
+
+    const timerStatus =
+        document.getElementById("timer-status");
+
+    const timerLabel =
+        document.getElementById("timer-label");
+
+    const sessionMessage =
+        document.getElementById("session-message");
+
+    const startButton =
+        document.getElementById("start-btn");
+
+    const pauseButton =
+        document.getElementById("pause-btn");
+
+    const resetButton =
+        document.getElementById("reset-btn");
+
+    const customFocus =
+        document.getElementById("custom-focus");
+
+    const taskInput =
+        document.getElementById("task-input");
+
+
+    // =========================
+    // TIMER VARIABLES
+    // =========================
+
+    let focusMinutes = 25;
+
+    let breakMinutes = 5;
+
+    let isBreak = false;
+
+    let isRunning = false;
+
+    let timerInterval = null;
+
+    let totalSeconds =
+        focusMinutes * 60;
+
+    let remainingSeconds =
+        totalSeconds;
+
+
+    // =========================
+    // FORMAT TIME
+    // =========================
+
+    function formatTime(seconds) {
+
+        const minutes =
+            Math.floor(seconds / 60);
+
+        const remaining =
+            seconds % 60;
+
+        return (
+            String(minutes).padStart(2, "0")
+            +
+            ":"
+            +
+            String(remaining).padStart(2, "0")
+        );
+
+    }
+
+
+    // =========================
+    // UPDATE DISPLAY
+    // =========================
+
+    function updateDisplay() {
+
+        timerDisplay.textContent =
+            formatTime(remainingSeconds);
+
+
+        const progress =
+            ((totalSeconds - remainingSeconds)
+            / totalSeconds)
+            * 360;
+
+
+        timerRing.style.background =
+            `conic-gradient(
+                #b978ff ${progress}deg,
+                rgba(255, 255, 255, 0.08)
+                ${progress}deg
+            )`;
+
+    }
+
+
+    // =========================
+    // START TIMER
+    // =========================
+
+    function startTimer() {
+
+        if (isRunning) {
+            return;
+        }
+
+        isRunning = true;
+
+        startButton.textContent =
+            "▶ Running";
+
+
+        const task =
+            taskInput.value.trim();
+
+
+        if (task && !isBreak) {
+
+            sessionMessage.textContent =
+                `Focusing on: ${task} ✦`;
+
+        }
+
+
+        timerInterval =
+            setInterval(function() {
+
+                if (remainingSeconds > 0) {
+
+                    remainingSeconds--;
+
+                    updateDisplay();
+
+                }
+
+                else {
+
+                    finishSession();
+
+                }
+
+            }, 1000);
+
+    }
+
+
+    // =========================
+    // PAUSE TIMER
+    // =========================
+
+    function pauseTimer() {
+
+        if (!isRunning) {
+            return;
+        }
+
+        clearInterval(timerInterval);
+
+        isRunning = false;
+
+        startButton.textContent =
+            "▶ Resume";
+
+        sessionMessage.textContent =
+            "Paused. Take your time ✦";
+
+    }
+
+
+    // =========================
+    // RESET TIMER
+    // =========================
+
+    function resetTimer() {
+
+        clearInterval(timerInterval);
+
+        isRunning = false;
+
+        isBreak = false;
+
+        totalSeconds =
+            focusMinutes * 60;
+
+        remainingSeconds =
+            totalSeconds;
+
+        startButton.textContent =
+            "▶ Start";
+
+        timerStatus.textContent =
+            "READY TO FOCUS";
+
+        timerLabel.textContent =
+            "Focus time";
+
+        sessionMessage.textContent =
+            "Choose your session and begin when you're ready ✦";
+
+        updateDisplay();
+
+    }
+
+
+    // =========================
+    // FINISH SESSION
+    // =========================
+
+    function finishSession() {
+
+        clearInterval(timerInterval);
+
+        isRunning = false;
+
+
+        // Focus finished
+        if (!isBreak) {
+
+            isBreak = true;
+
+            totalSeconds =
+                breakMinutes * 60;
+
+            remainingSeconds =
+                totalSeconds;
+
+            timerStatus.textContent =
+                "FOCUS COMPLETE ✦";
+
+            timerLabel.textContent =
+                "Break time";
+
+            sessionMessage.textContent =
+                "Beautiful work. Time to breathe and rest ☁️";
+
+            startButton.textContent =
+                "▶ Start break";
+
+
+        }
+
+        // Break finished
+        else {
+
+            isBreak = false;
+
+            totalSeconds =
+                focusMinutes * 60;
+
+            remainingSeconds =
+                totalSeconds;
+
+            timerStatus.textContent =
+                "BREAK COMPLETE ✦";
+
+            timerLabel.textContent =
+                "Focus time";
+
+            sessionMessage.textContent =
+                "Ready for another little focus session? 🍅";
+
+            startButton.textContent =
+                "▶ Start focus";
+
+        }
+
+        updateDisplay();
+
+    }
+
+
+    // =========================
+    // FOCUS DURATION BUTTONS
+    // =========================
+
+    const focusButtons =
+        document.querySelectorAll(
+            "#focus-options .duration-btn"
+        );
+
+
+    focusButtons.forEach(function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                focusButtons.forEach(
+                    btn => btn.classList.remove("active")
+                );
+
+                button.classList.add("active");
+
+                focusMinutes =
+                    Number(
+                        button.dataset.minutes
+                    );
+
+                customFocus.value = "";
+
+                if (!isRunning && !isBreak) {
+
+                    totalSeconds =
+                        focusMinutes * 60;
+
+                    remainingSeconds =
+                        totalSeconds;
+
+                    updateDisplay();
+
+                }
+
+            }
+        );
+
+    });
+
+
+    // =========================
+    // CUSTOM FOCUS
+    // =========================
+
+    customFocus.addEventListener(
+        "input",
+        function() {
+
+            const value =
+                Number(customFocus.value);
+
+
+            if (value >= 1 && value <= 180) {
+
+                focusButtons.forEach(
+                    btn =>
+                    btn.classList.remove("active")
+                );
+
+                focusMinutes =
+                    value;
+
+                if (!isRunning && !isBreak) {
+
+                    totalSeconds =
+                        focusMinutes * 60;
+
+                    remainingSeconds =
+                        totalSeconds;
+
+                    updateDisplay();
+
+                }
+
+            }
+
+        }
+    );
+
+
+    // =========================
+    // BREAK DURATION BUTTONS
+    // =========================
+
+    const breakButtons =
+        document.querySelectorAll(
+            "#break-options .duration-btn"
+        );
+
+
+    breakButtons.forEach(function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                breakButtons.forEach(
+                    btn => btn.classList.remove("active")
+                );
+
+                button.classList.add("active");
+
+                breakMinutes =
+                    Number(
+                        button.dataset.minutes
+                    );
+
+            }
+        );
+
+    });
+
+
+    // =========================
+    // BUTTON EVENTS
+    // =========================
+
+    startButton.addEventListener(
+        "click",
+        startTimer
+    );
+
+
+    pauseButton.addEventListener(
+        "click",
+        pauseTimer
+    );
+
+
+    resetButton.addEventListener(
+        "click",
+        resetTimer
+    );
+
+
+    // Initial display
+
+    updateDisplay();
+
+</script>
+
+{% endblock %}

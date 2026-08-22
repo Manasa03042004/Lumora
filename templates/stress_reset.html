@@ -1,0 +1,533 @@
+{% extends "base.html" %}
+
+{% block title %}Lumora — Stress Reset{% endblock %}
+
+{% block content %}
+
+<section class="exercise-page">
+
+    <a href="{{ url_for('reset') }}" class="back-link">
+        ← Back to reset center
+    </a>
+
+
+    <div class="exercise-container">
+
+        <p class="cosmic-eyebrow">
+            3 MINUTE STRESS RESET
+        </p>
+
+
+        <h1>
+            Let's slow things down.
+        </h1>
+
+
+        <p class="exercise-intro">
+            Nothing to solve right now.
+            <br>
+            Just breathe and be here.
+        </p>
+
+
+        <!-- =========================
+             BREATHING VISUAL
+        ========================== -->
+
+        <div class="breathing-area">
+
+            <div class="breathing-ring">
+
+                <div class="breathing-circle">
+
+                    <span id="breathing-text">
+                        Get ready
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             TIMER
+        ========================== -->
+
+        <div
+            id="timer"
+            class="exercise-timer"
+        >
+            03:00
+        </div>
+
+
+        <!-- =========================
+             CURRENT STEP
+        ========================== -->
+
+        <div class="exercise-step">
+
+            <p class="step-label">
+                RIGHT NOW
+            </p>
+
+
+            <h2 id="step-title">
+                Prepare yourself
+            </h2>
+
+
+            <p id="step-description">
+                Sit comfortably, relax your shoulders
+                and allow yourself to arrive in this moment.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             CONTROLS
+        ========================== -->
+
+        <div class="exercise-controls">
+
+
+            <!-- BEGIN BUTTON -->
+
+            <button
+                id="start-button"
+                class="exercise-button"
+                onclick="startStressReset()"
+            >
+                Begin
+                <span>→</span>
+            </button>
+
+
+            <!-- PAUSE / RESUME BUTTON -->
+
+            <button
+                id="pause-button"
+                class="exercise-secondary-button"
+                onclick="togglePause()"
+                style="display: none;"
+            >
+                Pause
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             NOTE
+        ========================== -->
+
+        <p class="exercise-note">
+            ✦ You can pause or leave whenever you need.
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+/* =========================================
+   TIMER VARIABLES
+========================================= */
+
+let totalSeconds = 180;
+
+let remainingSeconds = totalSeconds;
+
+let timerInterval = null;
+
+let running = false;
+
+let paused = false;
+
+
+/* =========================================
+   FORMAT TIME
+========================================= */
+
+function formatTime(seconds) {
+
+    const minutes = Math.floor(seconds / 60);
+
+    const secs = seconds % 60;
+
+    return (
+        String(minutes).padStart(2, "0")
+        + ":"
+        + String(secs).padStart(2, "0")
+    );
+
+}
+
+
+/* =========================================
+   UPDATE TIMER
+========================================= */
+
+function updateTimer() {
+
+    document.getElementById("timer").textContent =
+        formatTime(remainingSeconds);
+
+}
+
+
+/* =========================================
+   START STRESS RESET
+========================================= */
+
+function startStressReset() {
+
+    /* Prevent multiple timers */
+
+    if (running) {
+        return;
+    }
+
+
+    running = true;
+
+    paused = false;
+
+
+    const startButton =
+        document.getElementById("start-button");
+
+    const pauseButton =
+        document.getElementById("pause-button");
+
+
+    /* Hide Begin */
+
+    startButton.style.display =
+        "none";
+
+
+    /* Show Pause */
+
+    pauseButton.style.display =
+        "inline-flex";
+
+
+    pauseButton.textContent =
+        "Pause";
+
+
+    /* Start first instruction */
+
+    updateStep();
+
+
+    /* Start timer */
+
+    timerInterval = setInterval(function () {
+
+
+        /* Only count down when NOT paused */
+
+        if (!paused) {
+
+            remainingSeconds--;
+
+            updateTimer();
+
+            updateStep();
+
+
+            /* Timer finished */
+
+            if (remainingSeconds <= 0) {
+
+                clearInterval(timerInterval);
+
+                finishReset();
+
+            }
+
+        }
+
+    }, 1000);
+
+}
+
+
+/* =========================================
+   PAUSE / RESUME
+========================================= */
+
+function togglePause() {
+
+    /* Do nothing if exercise hasn't started */
+
+    if (!running) {
+        return;
+    }
+
+
+    const pauseButton =
+        document.getElementById("pause-button");
+
+    const breathingText =
+        document.getElementById("breathing-text");
+
+    const title =
+        document.getElementById("step-title");
+
+    const description =
+        document.getElementById("step-description");
+
+
+    /* =====================================
+       PAUSE
+    ===================================== */
+
+    if (!paused) {
+
+        paused = true;
+
+
+        pauseButton.textContent =
+            "Resume";
+
+
+        title.textContent =
+            "Take your time.";
+
+
+        description.textContent =
+            "The exercise is paused. " +
+            "Take a breath and continue whenever you're ready.";
+
+
+        breathingText.textContent =
+            "Paused";
+
+
+        breathingText.className =
+            "";
+
+    }
+
+
+    /* =====================================
+       RESUME
+    ===================================== */
+
+    else {
+
+        paused = false;
+
+
+        pauseButton.textContent =
+            "Pause";
+
+
+        updateStep();
+
+    }
+
+}
+
+
+/* =========================================
+   GUIDED STEPS
+========================================= */
+
+function updateStep() {
+
+    /* Don't change instructions while paused */
+
+    if (paused) {
+        return;
+    }
+
+
+    const elapsed =
+        totalSeconds - remainingSeconds;
+
+
+    const title =
+        document.getElementById("step-title");
+
+    const description =
+        document.getElementById("step-description");
+
+    const breathingText =
+        document.getElementById("breathing-text");
+
+
+    /* =====================================
+       STEP 1 — BREATHING
+       0–60 seconds
+    ===================================== */
+
+    if (elapsed < 60) {
+
+        title.textContent =
+            "Slow your breathing.";
+
+
+        description.textContent =
+            "Breathe in slowly through your nose... " +
+            "and gently breathe out.";
+
+
+        breathingText.textContent =
+            "Breathe";
+
+
+        breathingText.className =
+            "breathe-animation";
+
+    }
+
+
+    /* =====================================
+       STEP 2 — RELEASE
+       60–120 seconds
+    ===================================== */
+
+    else if (elapsed < 120) {
+
+        title.textContent =
+            "Release the tension.";
+
+
+        description.textContent =
+            "Drop your shoulders. " +
+            "Relax your jaw. " +
+            "Let your hands become soft.";
+
+
+        breathingText.textContent =
+            "Release";
+
+
+        breathingText.className =
+            "";
+
+    }
+
+
+    /* =====================================
+       STEP 3 — GROUNDING
+       120–180 seconds
+    ===================================== */
+
+    else {
+
+        title.textContent =
+            "Come back to the present.";
+
+
+        description.textContent =
+            "Notice three things you can see, " +
+            "two things you can hear, " +
+            "and one thing you can feel.";
+
+
+        breathingText.textContent =
+            "Be here";
+
+
+        breathingText.className =
+            "";
+
+    }
+
+}
+
+
+/* =========================================
+   FINISH RESET
+========================================= */
+
+function finishReset() {
+
+    /* Stop everything */
+
+    running = false;
+
+    paused = false;
+
+
+    /* Final message */
+
+    document.getElementById("step-title").textContent =
+        "You made space for yourself. ✦";
+
+
+    document.getElementById("step-description").textContent =
+        "Take one more slow breath. " +
+        "You can return whenever you need.";
+
+
+    /* Breathing circle */
+
+    document.getElementById("breathing-text").textContent =
+        "✦";
+
+
+    document.getElementById("breathing-text").className =
+        "";
+
+
+    /* Timer */
+
+    document.getElementById("timer").textContent =
+        "Complete";
+
+
+    /* Buttons */
+
+    const startButton =
+        document.getElementById("start-button");
+
+    const pauseButton =
+        document.getElementById("pause-button");
+
+
+    /* Hide Pause */
+
+    pauseButton.style.display =
+        "none";
+
+
+    /* Show return button */
+
+    startButton.style.display =
+        "inline-flex";
+
+
+    startButton.innerHTML =
+        "Return to Reset Center →";
+
+
+    /* Change button action */
+
+    startButton.onclick =
+        function () {
+
+            window.location.href =
+                "{{ url_for('reset') }}";
+
+        };
+
+}
+
+</script>
+
+{% endblock %}

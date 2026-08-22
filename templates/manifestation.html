@@ -1,0 +1,996 @@
+{% extends "base.html" %}
+
+{% block title %}
+Lumora — Manifestation Journal
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+    /* =========================================
+       MANIFESTATION PAGE
+    ========================================= */
+
+    .manifest-page {
+        min-height: 100vh;
+        padding: 32px 20px 60px;
+        position: relative;
+        overflow: hidden;
+
+        background:
+            radial-gradient(
+                circle at 12% 10%,
+                rgba(174, 123, 255, 0.16),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 88% 30%,
+                rgba(255, 170, 215, 0.08),
+                transparent 26%
+            ),
+            radial-gradient(
+                circle at 50% 90%,
+                rgba(130, 90, 230, 0.10),
+                transparent 30%
+            ),
+            linear-gradient(
+                135deg,
+                #0f0b20,
+                #1a1035,
+                #110b24
+            );
+    }
+
+
+    .manifest-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+
+        background-image:
+            radial-gradient(
+                circle,
+                rgba(255, 255, 255, 0.4) 1px,
+                transparent 1.5px
+            );
+
+        background-size: 100px 100px;
+        opacity: 0.12;
+    }
+
+
+    /* =========================================
+       FLOATING SPARKLES
+    ========================================= */
+
+    .manifest-sparkles {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+
+    .manifest-sparkle {
+        position: absolute;
+        color: #dec7ff;
+        text-shadow:
+            0 0 16px rgba(190, 145, 255, 0.65);
+
+        animation:
+            manifestFloat 5s ease-in-out infinite;
+    }
+
+
+    .manifest-sparkle:nth-child(1) {
+        top: 10%;
+        left: 7%;
+        font-size: 17px;
+    }
+
+
+    .manifest-sparkle:nth-child(2) {
+        top: 20%;
+        right: 9%;
+        font-size: 14px;
+        animation-delay: 1s;
+    }
+
+
+    .manifest-sparkle:nth-child(3) {
+        top: 55%;
+        left: 5%;
+        font-size: 19px;
+        animation-delay: 2s;
+    }
+
+
+    .manifest-sparkle:nth-child(4) {
+        bottom: 20%;
+        right: 6%;
+        font-size: 18px;
+        animation-delay: 0.5s;
+    }
+
+
+    .manifest-sparkle:nth-child(5) {
+        bottom: 8%;
+        left: 12%;
+        font-size: 14px;
+        animation-delay: 2.5s;
+    }
+
+
+    /* =========================================
+       MAIN CONTAINER
+    ========================================= */
+
+    .manifest-container {
+        width: min(100%, 950px);
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+
+
+    /* =========================================
+       BACK BUTTON
+    ========================================= */
+
+    .manifest-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        margin-bottom: 30px;
+
+        color: rgba(255, 255, 255, 0.58);
+        text-decoration: none;
+        font-size: 14px;
+
+        transition: 0.25s ease;
+    }
+
+
+    .manifest-back:hover {
+        color: #dec7ff;
+        transform: translateX(-4px);
+    }
+
+
+    /* =========================================
+       HERO
+    ========================================= */
+
+    .manifest-hero {
+        max-width: 720px;
+        margin: 0 auto 22px;
+        text-align: center;
+    }
+
+
+    .manifest-symbol {
+        width: 62px;
+        height: 62px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin: 0 auto 15px;
+
+        border-radius: 50%;
+
+        font-size: 27px;
+
+        background:
+            radial-gradient(
+                circle,
+                rgba(165, 115, 255, 0.22),
+                rgba(110, 70, 190, 0.06)
+            );
+
+        border:
+            1px solid rgba(215, 185, 255, 0.18);
+
+        box-shadow:
+            0 0 45px rgba(150, 100, 255, 0.16);
+    }
+
+
+    .manifest-eyebrow {
+        margin: 0 0 10px;
+
+        color: rgba(213, 185, 255, 0.72);
+
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 3px;
+    }
+
+
+    .manifest-hero h1 {
+        margin: 0;
+
+        color: #f6f1ff;
+
+        font-size: clamp(40px, 6vw, 64px);
+        font-weight: 500;
+
+        letter-spacing: -1.5px;
+        line-height: 1.1;
+    }
+
+
+    .manifest-hero > p {
+        max-width: 610px;
+
+        margin: 14px auto 0;
+
+        color: rgba(255, 255, 255, 0.54);
+
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+
+    /* =========================================
+       DAILY AFFIRMATION
+    ========================================= */
+
+    .affirmation-card {
+        max-width: 680px;
+
+        margin: 0 auto 25px;
+        padding: 18px 24px;
+
+        text-align: center;
+
+        border-radius: 18px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(155, 105, 240, 0.13),
+                rgba(255, 255, 255, 0.03)
+            );
+
+        border:
+            1px solid rgba(210, 180, 255, 0.12);
+    }
+
+
+    .affirmation-label {
+        display: block;
+        margin-bottom: 8px;
+
+        color: rgba(208, 177, 255, 0.60);
+
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 2.5px;
+    }
+
+
+    .affirmation-text {
+        margin: 0;
+
+        color: #e8dcff;
+
+        font-size: 17px;
+        font-style: italic;
+        line-height: 1.5;
+    }
+
+
+    /* =========================================
+       JOURNAL CARD
+    ========================================= */
+
+    .manifest-journal {
+        padding: 32px;
+
+        border-radius: 26px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.07),
+                rgba(255, 255, 255, 0.025)
+            );
+
+        border:
+            1px solid rgba(255, 255, 255, 0.10);
+
+        box-shadow:
+            0 25px 75px rgba(0, 0, 0, 0.28);
+
+        backdrop-filter: blur(20px);
+    }
+
+
+    .journal-heading {
+        margin-bottom: 28px;
+    }
+
+
+    .journal-heading h2 {
+        margin: 0 0 8px;
+
+        color: #f5efff;
+
+        font-size: 27px;
+        font-weight: 500;
+    }
+
+
+    .journal-heading p {
+        margin: 0;
+
+        color: rgba(255, 255, 255, 0.48);
+
+        font-size: 14px;
+    }
+
+
+    /* =========================================
+       FORM GRID
+    ========================================= */
+
+    .manifest-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+    }
+
+
+    .manifest-field.full-width {
+        grid-column: 1 / -1;
+    }
+
+
+    .manifest-field label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #f4efff;
+
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+
+    .manifest-field label span {
+        margin-right: 6px;
+        color: #d9bcff;
+    }
+
+
+    .manifest-field small {
+        display: block;
+
+        min-height: 32px;
+
+        margin-bottom: 10px;
+
+        color: rgba(255, 255, 255, 0.42);
+
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+
+    .manifest-field textarea,
+    .manifest-field input {
+        width: 100%;
+
+        box-sizing: border-box;
+        outline: none;
+
+        border-radius: 15px;
+
+        border:
+            1px solid rgba(255, 255, 255, 0.10);
+
+        background:
+            rgba(255, 255, 255, 0.025);
+
+        color: #ffffff;
+
+        font-family: inherit;
+        font-size: 14px;
+
+        transition: 0.25s ease;
+    }
+
+
+    .manifest-field textarea {
+        min-height: 135px;
+
+        padding: 15px;
+
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+
+    .manifest-field.full-width textarea {
+        min-height: 145px;
+    }
+
+
+    .manifest-field input {
+        padding: 15px;
+    }
+
+
+    .manifest-field textarea::placeholder,
+    .manifest-field input::placeholder {
+        color: rgba(255, 255, 255, 0.28);
+    }
+
+
+    .manifest-field textarea:focus,
+    .manifest-field input:focus {
+        border-color:
+            rgba(190, 145, 255, 0.50);
+
+        background:
+            rgba(160, 110, 255, 0.045);
+
+        box-shadow:
+            0 0 0 4px rgba(160, 110, 255, 0.04),
+            0 0 30px rgba(150, 100, 255, 0.08);
+    }
+
+
+    /* =========================================
+       TIP
+    ========================================= */
+
+    .manifest-tip {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+
+        margin-top: 25px;
+        padding: 18px;
+
+        border-radius: 17px;
+
+        background:
+            rgba(255, 255, 255, 0.035);
+
+        border:
+            1px solid rgba(255, 255, 255, 0.07);
+    }
+
+
+    .manifest-tip-icon {
+        flex-shrink: 0;
+        font-size: 21px;
+    }
+
+
+    .manifest-tip p {
+        margin: 0;
+
+        color: rgba(255, 255, 255, 0.52);
+
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+
+    .manifest-tip strong {
+        color: #dcc3ff;
+        font-weight: 500;
+    }
+
+
+    /* =========================================
+       SAVE BUTTON
+    ========================================= */
+
+    .manifest-actions {
+        display: flex;
+        justify-content: center;
+
+        margin-top: 27px;
+    }
+
+
+    .save-manifest-btn {
+        min-width: 250px;
+
+        padding: 15px 28px;
+
+        border: none;
+        border-radius: 100px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #9d72e8,
+                #6849bb
+            );
+
+        color: #ffffff;
+
+        font-family: inherit;
+
+        font-size: 15px;
+        font-weight: 500;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 15px 40px rgba(110, 70, 200, 0.28);
+
+        transition: 0.25s ease;
+    }
+
+
+    .save-manifest-btn:hover {
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 22px 48px rgba(110, 70, 200, 0.42);
+    }
+
+
+    /* =========================================
+       SUCCESS MESSAGE
+    ========================================= */
+
+    .manifest-success {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+
+        margin-top: 22px;
+        padding: 16px 18px;
+
+        border-radius: 16px;
+
+        background:
+            rgba(180, 130, 255, 0.09);
+
+        border:
+            1px solid rgba(190, 145, 255, 0.22);
+
+        animation:
+            manifestAppear 0.5s ease;
+    }
+
+
+    .manifest-success-icon {
+        flex-shrink: 0;
+
+        color: #dec7ff;
+
+        font-size: 21px;
+    }
+
+
+    .manifest-success p {
+        margin: 0;
+
+        color: rgba(238, 228, 255, 0.90);
+
+        font-size: 14px;
+        line-height: 1.6;
+
+        text-align: center;
+    }
+
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+
+    .manifest-footer-note {
+        margin: 22px 0 0;
+
+        text-align: center;
+
+        color: rgba(210, 190, 255, 0.42);
+
+        font-size: 13px;
+    }
+
+
+    /* =========================================
+       ANIMATIONS
+    ========================================= */
+
+    @keyframes manifestAppear {
+
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    }
+
+
+    @keyframes manifestFloat {
+
+        0%,
+        100% {
+            transform: translateY(0);
+            opacity: 0.65;
+        }
+
+        50% {
+            transform: translateY(-10px);
+            opacity: 1;
+        }
+
+    }
+
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 700px) {
+
+        .manifest-page {
+            padding: 24px 14px 45px;
+        }
+
+
+        .manifest-journal {
+            padding: 24px 17px;
+
+            border-radius: 22px;
+        }
+
+
+        .manifest-grid {
+            grid-template-columns: 1fr;
+        }
+
+
+        .manifest-field.full-width {
+            grid-column: auto;
+        }
+
+
+        .manifest-actions {
+            display: block;
+        }
+
+
+        .save-manifest-btn {
+            width: 100%;
+        }
+
+
+        .manifest-hero h1 {
+            font-size: 40px;
+        }
+
+
+        .manifest-tip {
+            padding: 15px;
+        }
+
+    }
+
+</style>
+
+
+<div class="manifest-sparkles">
+
+    <span class="manifest-sparkle">✦</span>
+    <span class="manifest-sparkle">✧</span>
+    <span class="manifest-sparkle">✦</span>
+    <span class="manifest-sparkle">✨</span>
+    <span class="manifest-sparkle">✧</span>
+
+</div>
+
+
+<section class="manifest-page">
+
+    <div class="manifest-container">
+
+
+        <!-- BACK -->
+
+        <a
+            href="{{ url_for('home') }}"
+            class="manifest-back"
+        >
+            ← Back to your space
+        </a>
+
+
+        <!-- HERO -->
+
+        <section class="manifest-hero">
+
+            <div class="manifest-symbol">
+                🔮
+            </div>
+
+            <p class="manifest-eyebrow">
+                CREATE YOUR FUTURE
+            </p>
+
+            <h1>
+                Create the life<br>
+                you can already see.
+            </h1>
+
+            <p>
+                Put your dreams into words, feel them as if they are
+                already yours, and make space for the life you want
+                to welcome in.
+            </p>
+
+        </section>
+
+
+        <!-- DAILY AFFIRMATION -->
+
+        <div class="affirmation-card">
+
+            <span class="affirmation-label">
+                TODAY'S REMINDER
+            </span>
+
+            <p class="affirmation-text">
+                “What is meant for me is finding its way to me.”
+            </p>
+
+        </div>
+
+
+        <!-- JOURNAL -->
+
+        <section class="manifest-journal">
+
+            <div class="journal-heading">
+
+                <h2>
+                    Your manifestation ✨
+                </h2>
+
+                <p>
+                    Write it as if it is already becoming your reality.
+                </p>
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('manifestation') }}"
+            >
+
+                <div class="manifest-grid">
+
+
+                    <!-- DREAM -->
+
+                    <div class="manifest-field">
+
+                        <label>
+                            <span>✦</span>
+                            What am I calling into my life?
+                        </label>
+
+                        <small>
+                            A dream, opportunity, relationship,
+                            experience or version of yourself.
+                        </small>
+
+                        <textarea
+                            name="dream"
+                            placeholder="I am calling in..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- FEELING -->
+
+                    <div class="manifest-field">
+
+                        <label>
+                            <span>♡</span>
+                            How does it make me feel?
+                        </label>
+
+                        <small>
+                            Focus on the feeling you want to experience.
+                        </small>
+
+                        <textarea
+                            name="feeling"
+                            placeholder="I feel peaceful, confident, loved..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- LIFE DESCRIPTION -->
+
+                    <div class="manifest-field full-width">
+
+                        <label>
+                            <span>🌙</span>
+                            Describe your life as if it is already happening
+                        </label>
+
+                        <small>
+                            Let yourself imagine freely.
+                            Write in the present tense.
+                        </small>
+
+                        <textarea
+                            name="life_description"
+                            placeholder="I wake up feeling grateful because..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- AFFIRMATION -->
+
+                    <div class="manifest-field full-width">
+
+                        <label>
+                            <span>✨</span>
+                            My manifestation affirmation
+                        </label>
+
+                        <small>
+                            Create one powerful sentence you want to believe.
+                        </small>
+
+                        <input
+                            type="text"
+                            name="affirmation"
+                            placeholder="I am ready to receive everything meant for me."
+                            required
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- TIP -->
+
+                <div class="manifest-tip">
+
+                    <div class="manifest-tip-icon">
+                        💫
+                    </div>
+
+                    <p>
+
+                        <strong>
+                            Little reminder:
+                        </strong>
+
+                        Don't worry about writing perfectly.
+                        Let your words come naturally and write about
+                        your dream as if you are already living it.
+
+                    </p>
+
+                </div>
+
+
+                <!-- SAVE -->
+
+                <div class="manifest-actions">
+
+                    <button
+                        type="submit"
+                        class="save-manifest-btn"
+                    >
+                        Save my manifestation ✨
+                    </button>
+
+                </div>
+
+
+                <!-- SUCCESS MESSAGE -->
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+
+                    {% for category, message in messages %}
+
+                        {% if category == "manifestation-success" %}
+
+                            <div
+                                class="manifest-success"
+                                id="manifest-success"
+                            >
+
+                                <span class="manifest-success-icon">
+                                    ✦
+                                </span>
+
+                                <p>
+                                    {{ message }}
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                {% endwith %}
+
+            </form>
+
+        </section>
+
+
+        <p class="manifest-footer-note">
+            ✦ Your dreams are safe in your Lumora space.
+        </p>
+
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+    const manifestSuccess =
+        document.getElementById("manifest-success");
+
+
+    if (manifestSuccess) {
+
+        setTimeout(
+            function() {
+
+                manifestSuccess.style.opacity = "0";
+
+                setTimeout(
+                    function() {
+
+                        manifestSuccess.remove();
+
+                    },
+                    400
+                );
+
+            },
+            6000
+        );
+
+    }
+
+</script>
+
+{% endblock %}

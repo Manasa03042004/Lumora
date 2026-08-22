@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Lumora — Pause. Believe. Become.{% endblock %}
+
+{% block content %}
+
+<section class="landing">
+
+    <div class="landing-orb"></div>
+
+    <div class="landing-content">
+
+        <div class="brand-symbol">
+            ✦
+        </div>
+
+        <h1 class="logo">LUMORA</h1>
+
+        <p class="tagline">
+            Pause. Believe. Become.
+        </p>
+
+        <p class="intro">
+            A little universe for your mind,
+            your dreams, and your journey.
+        </p>
+
+        <div class="landing-buttons">
+
+           <a href="{{ url_for('register') }}" class="cosmic-button">
+                Begin Your Journey
+                <span>→</span>
+            </a>
+
+            <a href="{{ url_for('login') }}" class="text-button">
+    I already have an account
+</a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

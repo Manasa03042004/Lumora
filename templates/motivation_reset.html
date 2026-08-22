@@ -1,0 +1,844 @@
+{% extends "base.html" %}
+
+{% block title %}Lumora — Motivation Reset{% endblock %}
+
+{% block content %}
+
+<section class="motivation-page">
+
+    <a href="{{ url_for('reset') }}" class="back-link motivation-back">
+        ← Back to reset center
+    </a>
+
+
+    <!-- =====================================
+         SCREEN 1 — CHOOSE WHAT'S HOLDING YOU BACK
+    ====================================== -->
+
+    <div id="motivation-screen-1" class="motivation-screen active-screen">
+
+        <div class="motivation-intro">
+
+            <div class="motivation-orbit">
+                <span class="orbit-star orbit-star-1">✦</span>
+                <span class="orbit-star orbit-star-2">✧</span>
+
+                <div class="motivation-core">
+                    ✦
+                </div>
+            </div>
+
+            <p class="cosmic-eyebrow">
+                A LITTLE CHECK-IN
+            </p>
+
+            <h1>
+                What's holding you back
+                <span>right now?</span>
+            </h1>
+
+            <p class="motivation-subtitle">
+                You don't have to explain everything.
+                <br>
+                Just choose what feels closest.
+            </p>
+
+        </div>
+
+
+        <!-- FEELING CARDS -->
+
+        <div class="feeling-grid">
+
+            <button
+                class="feeling-card"
+                data-feeling="not-enough"
+                onclick="chooseFeeling('not-enough')"
+            >
+
+                <span class="feeling-icon">😔</span>
+
+                <div class="feeling-text">
+
+                    <h3>
+                        I don't feel good enough
+                    </h3>
+
+                    <p>
+                        I'm doubting myself.
+                    </p>
+
+                </div>
+
+                <span class="feeling-arrow">→</span>
+
+            </button>
+
+
+            <button
+                class="feeling-card"
+                data-feeling="too-much"
+                onclick="chooseFeeling('too-much')"
+            >
+
+                <span class="feeling-icon">😵</span>
+
+                <div class="feeling-text">
+
+                    <h3>
+                        I have too much to do
+                    </h3>
+
+                    <p>
+                        Everything feels like too much.
+                    </p>
+
+                </div>
+
+                <span class="feeling-arrow">→</span>
+
+            </button>
+
+
+            <button
+                class="feeling-card"
+                data-feeling="no-energy"
+                onclick="chooseFeeling('no-energy')"
+            >
+
+                <span class="feeling-icon">😮‍💨</span>
+
+                <div class="feeling-text">
+
+                    <h3>
+                        I don't have the energy
+                    </h3>
+
+                    <p>
+                        Even starting feels difficult.
+                    </p>
+
+                </div>
+
+                <span class="feeling-arrow">→</span>
+
+            </button>
+
+
+            <button
+                class="feeling-card"
+                data-feeling="scared"
+                onclick="chooseFeeling('scared')"
+            >
+
+                <span class="feeling-icon">😨</span>
+
+                <div class="feeling-text">
+
+                    <h3>
+                        I'm scared I'll fail
+                    </h3>
+
+                    <p>
+                        What if I can't do it?
+                    </p>
+
+                </div>
+
+                <span class="feeling-arrow">→</span>
+
+            </button>
+
+        </div>
+
+
+        <p class="motivation-bottom-note">
+            ✦ There is no wrong answer here.
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================
+         SCREEN 2 — PERSONAL RESPONSE
+    ====================================== -->
+
+    <div id="motivation-screen-2" class="motivation-screen">
+
+        <div class="response-experience">
+
+            <div class="selected-feeling-badge" id="selected-feeling-badge">
+
+                <span id="selected-feeling-icon">✦</span>
+
+                <span id="selected-feeling-text">
+                    You chose this
+                </span>
+
+            </div>
+
+
+            <!-- RESPONSE TEXT -->
+
+            <div class="response-message">
+
+                <p class="response-eyebrow">
+                    LUMORA SAYS
+                </p>
+
+                <h1 id="response-line-1">
+                    Maybe you don't feel ready.
+                </h1>
+
+                <p id="response-line-2">
+                    But you don't need to feel ready to begin.
+                </p>
+
+            </div>
+
+
+            <!-- INTERACTIVE STAR -->
+
+            <button
+                id="continue-star"
+                class="continue-star"
+                onclick="goToActionScreen()"
+                aria-label="Continue"
+            >
+
+                <span class="star-glow"></span>
+
+                <span class="star-symbol">
+                    ✦
+                </span>
+
+            </button>
+
+
+            <p class="tap-star-text">
+                Tap the light to continue
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         SCREEN 3 — ONE SMALL ACTION
+    ====================================== -->
+
+    <div id="motivation-screen-3" class="motivation-screen">
+
+        <div class="action-experience">
+
+            <div class="action-light">
+                ✦
+            </div>
+
+            <p class="cosmic-eyebrow">
+                JUST ONE THING
+            </p>
+
+            <h1>
+                Don't think about
+                <span>the whole journey.</span>
+            </h1>
+
+            <p class="action-intro">
+                What is one tiny thing you can do
+                <br>
+                in the next 10 minutes?
+            </p>
+
+
+            <!-- CUSTOM TASK INPUT -->
+
+            <div class="task-input-wrap">
+
+                <label for="motivation-task">
+                    MY NEXT STEP
+                </label>
+
+                <div class="task-input-box">
+
+                    <span class="task-input-star">
+                        ✦
+                    </span>
+
+                    <input
+                        type="text"
+                        id="motivation-task"
+                        placeholder="For example: Read 2 pages"
+                        maxlength="100"
+                        autocomplete="off"
+                    >
+
+                </div>
+
+                <p id="task-error" class="task-error">
+                    Choose one small step first ✦
+                </p>
+
+            </div>
+
+
+            <button
+                class="next-step-button"
+                onclick="saveNextStep()"
+            >
+
+                <span>
+                    This is my next step
+                </span>
+
+                <span class="button-star">
+                    ✦
+                </span>
+
+            </button>
+
+
+            <p class="small-step-note">
+                It doesn't have to be impressive.
+                <br>
+                It just has to be possible.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         SCREEN 4 — YOUR MOMENT
+    ====================================== -->
+
+    <div id="motivation-screen-4" class="motivation-screen">
+
+        <div class="reward-experience">
+
+
+            <!-- CELEBRATION STARS -->
+
+            <span class="celebration-star celebration-star-1">✦</span>
+            <span class="celebration-star celebration-star-2">✧</span>
+            <span class="celebration-star celebration-star-3">✦</span>
+            <span class="celebration-star celebration-star-4">✧</span>
+
+
+            <div class="reward-light">
+                <div class="reward-ring reward-ring-1"></div>
+                <div class="reward-ring reward-ring-2"></div>
+
+                <div class="reward-star">
+                    ✦
+                </div>
+            </div>
+
+
+            <p class="cosmic-eyebrow">
+                YOU FOUND A WAY FORWARD
+            </p>
+
+            <h1>
+                That's enough
+                <span>for now.</span>
+            </h1>
+
+            <p class="reward-message">
+                You don't have to conquer everything tonight.
+                <br>
+                You just have to begin here.
+            </p>
+
+
+            <!-- USER'S TASK -->
+
+            <div class="next-step-card">
+
+                <div class="next-step-card-top">
+
+                    <span class="next-step-label">
+                        ✦ YOUR NEXT STEP
+                    </span>
+
+                </div>
+
+                <h2 id="final-task">
+                    Your small step
+                </h2>
+
+            </div>
+
+
+            <!-- FINAL CHOICE -->
+
+            <div class="reward-actions">
+
+                <button
+                    class="start-now-button"
+                    onclick="startMyStep()"
+                >
+
+                    <span class="start-now-icon">
+                        ✦
+                    </span>
+
+                    <span>
+                        I'm starting now
+                    </span>
+
+                    <span class="start-now-arrow">
+                        →
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="save-later-button"
+                    onclick="returnToReset()"
+                >
+
+                    Save this for later
+
+                </button>
+
+            </div>
+
+
+            <p class="reward-note">
+                One small step still counts.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         SCREEN 5 — STARTED / CELEBRATION
+    ====================================== -->
+
+    <div id="motivation-screen-5" class="motivation-screen">
+
+        <div class="started-experience">
+
+            <div class="started-progress">
+
+                <div class="progress-circle">
+
+                    <svg viewBox="0 0 120 120">
+
+                        <circle
+                            class="progress-bg"
+                            cx="60"
+                            cy="60"
+                            r="52"
+                        ></circle>
+
+                        <circle
+                            class="progress-fill"
+                            cx="60"
+                            cy="60"
+                            r="52"
+                        ></circle>
+
+                    </svg>
+
+                    <div class="progress-star">
+                        ✦
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <p class="cosmic-eyebrow">
+                YOU SHOWED UP
+            </p>
+
+            <h1>
+                That's how
+                <span>things begin.</span>
+            </h1>
+
+            <p class="started-message">
+                Not with having everything figured out.
+                <br>
+                Just with one decision to move.
+            </p>
+
+
+            <div class="started-task-display">
+
+                <span>
+                    I'M STARTING WITH
+                </span>
+
+                <strong id="started-task">
+                    Your next step
+                </strong>
+
+            </div>
+
+
+            <button
+                class="return-reset-button"
+                onclick="returnToReset()"
+            >
+
+                Back to Reset Center
+                <span>→</span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+</section>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+/* =====================================
+   DATA
+===================================== */
+
+const motivationResponses = {
+
+    "not-enough": {
+
+        icon: "😔",
+
+        label: "I don't feel good enough",
+
+        line1: "Maybe you don't feel ready.",
+
+        line2: "But you don't need to feel ready to begin."
+
+    },
+
+
+    "too-much": {
+
+        icon: "😵",
+
+        label: "I have too much to do",
+
+        line1: "You don't have to carry everything at once.",
+
+        line2: "For now, we only need to make the next ten minutes feel possible."
+
+    },
+
+
+    "no-energy": {
+
+        icon: "😮‍💨",
+
+        label: "I don't have the energy",
+
+        line1: "Then don't ask yourself for everything.",
+
+        line2: "A tiny step is still movement. Let's find one that feels possible."
+
+    },
+
+
+    "scared": {
+
+        icon: "😨",
+
+        label: "I'm scared I'll fail",
+
+        line1: "Being scared doesn't mean you can't do it.",
+
+        line2: "You can be scared and still take one small step forward."
+
+    }
+
+};
+
+
+let selectedFeeling = null;
+let selectedTask = "";
+
+
+/* =====================================
+   SHOW SCREEN
+===================================== */
+
+function showScreen(screenNumber) {
+
+    const screens =
+        document.querySelectorAll(".motivation-screen");
+
+
+    screens.forEach(function(screen) {
+
+        screen.classList.remove("active-screen");
+
+    });
+
+
+    const nextScreen =
+        document.getElementById(
+            "motivation-screen-" + screenNumber
+        );
+
+
+    setTimeout(function() {
+
+        nextScreen.classList.add("active-screen");
+
+    }, 150);
+
+}
+
+
+/* =====================================
+   SCREEN 1
+   CHOOSE FEELING
+===================================== */
+
+function chooseFeeling(feeling) {
+
+    selectedFeeling =
+        feeling;
+
+
+    const cards =
+        document.querySelectorAll(".feeling-card");
+
+
+    cards.forEach(function(card) {
+
+        card.classList.add("card-leaving");
+
+    });
+
+
+    const selectedCard =
+        document.querySelector(
+            '[data-feeling="' + feeling + '"]'
+        );
+
+
+    selectedCard.classList.remove("card-leaving");
+
+    selectedCard.classList.add("card-selected");
+
+
+    setTimeout(function() {
+
+        document.getElementById(
+            "selected-feeling-icon"
+        ).textContent =
+            motivationResponses[feeling].icon;
+
+
+        document.getElementById(
+            "selected-feeling-text"
+        ).textContent =
+            motivationResponses[feeling].label;
+
+
+        document.getElementById(
+            "response-line-1"
+        ).textContent =
+            motivationResponses[feeling].line1;
+
+
+        document.getElementById(
+            "response-line-2"
+        ).textContent =
+            motivationResponses[feeling].line2;
+
+
+        showScreen(2);
+
+    }, 650);
+
+}
+
+
+/* =====================================
+   SCREEN 2
+   CONTINUE
+===================================== */
+
+function goToActionScreen() {
+
+    const star =
+        document.getElementById(
+            "continue-star"
+        );
+
+
+    star.classList.add(
+        "star-activated"
+    );
+
+
+    setTimeout(function() {
+
+        showScreen(3);
+
+        document.getElementById(
+            "motivation-task"
+        ).focus();
+
+    }, 550);
+
+}
+
+
+/* =====================================
+   SCREEN 3
+   SAVE NEXT STEP
+===================================== */
+
+function saveNextStep() {
+
+    const input =
+        document.getElementById(
+            "motivation-task"
+        );
+
+
+    const error =
+        document.getElementById(
+            "task-error"
+        );
+
+
+    const task =
+        input.value.trim();
+
+
+    if (task === "") {
+
+        error.classList.add(
+            "show-error"
+        );
+
+
+        input.classList.add(
+            "input-error"
+        );
+
+
+        input.focus();
+
+
+        setTimeout(function() {
+
+            error.classList.remove(
+                "show-error"
+            );
+
+
+            input.classList.remove(
+                "input-error"
+            );
+
+        }, 2500);
+
+
+        return;
+
+    }
+
+
+    selectedTask =
+        task;
+
+
+    document.getElementById(
+        "final-task"
+    ).textContent =
+        selectedTask;
+
+
+    document.getElementById(
+        "started-task"
+    ).textContent =
+        selectedTask;
+
+
+    showScreen(4);
+
+}
+
+
+/* =====================================
+   SCREEN 4
+   START NOW
+===================================== */
+
+function startMyStep() {
+
+    showScreen(5);
+
+}
+
+
+/* =====================================
+   RETURN TO RESET CENTER
+===================================== */
+
+function returnToReset() {
+
+    window.location.href =
+        "{{ url_for('reset') }}";
+
+}
+
+
+/* =====================================
+   ENTER KEY SUPPORT
+===================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        const taskInput =
+            document.getElementById(
+                "motivation-task"
+            );
+
+
+        taskInput.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (event.key === "Enter") {
+
+                    saveNextStep();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Lumora — I Need a Reset{% endblock %}
+
+{% block content %}
+
+<section class="reset-page">
+
+    <a href="{{ url_for('home') }}" class="back-link">
+        ← Back to your space
+    </a>
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="reset-header">
+
+        <div class="reset-header-star">
+            ✦
+        </div>
+
+        <p class="cosmic-eyebrow">
+            TAKE A MOMENT
+        </p>
+
+        <h1>
+            What do you need<br>
+            right now?
+        </h1>
+
+        <p>
+            You don't have to fix everything.
+            <br>
+            Let's take one small step together.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         RESET OPTIONS
+    ========================== -->
+
+    <div class="reset-options">
+
+
+        <!-- STRESS — ACTIVE -->
+
+        <a
+            href="{{ url_for('stress_reset') }}"
+            class="reset-option"
+        >
+
+            <div class="reset-option-icon">
+                😰
+            </div>
+
+            <div class="reset-option-content">
+
+                <h2>
+                    I'm stressed
+                </h2>
+
+                <p>
+                    Calm your body and release
+                    some tension.
+                </p>
+
+                <span>
+                    3 min reset →
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- OVERWHELMED — ACTIVE -->
+
+        <a
+            href="{{ url_for('overwhelmed_reset') }}"
+            class="reset-option"
+        >
+
+            <div class="reset-option-icon">
+                😵
+            </div>
+
+            <div class="reset-option-content">
+
+                <h2>
+                    I'm overwhelmed
+                </h2>
+
+                <p>
+                    Slow everything down
+                    and clear your mind.
+                </p>
+
+                <span>
+                    5 min reset →
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- FOCUS — ACTIVE -->
+
+        <a
+            href="{{ url_for('focus_reset') }}"
+            class="reset-option"
+        >
+
+            <div class="reset-option-icon">
+                🎯
+            </div>
+
+            <div class="reset-option-content">
+
+                <h2>
+                    I can't focus
+                </h2>
+
+                <p>
+                    Reset your attention
+                    and prepare to concentrate.
+                </p>
+
+                <span>
+                    3 min focus reset →
+                </span>
+
+            </div>
+
+        </a>
+
+
+        <!-- =========================
+     TIRED — ACTIVE
+========================== -->
+
+<a
+    href="{{ url_for('tired_reset') }}"
+    class="reset-option"
+>
+
+    <div class="reset-option-icon">
+        😴
+    </div>
+
+    <div class="reset-option-content">
+
+        <h2>
+            I'm tired
+        </h2>
+
+        <p>
+            Wake up your body,
+            eyes and mind.
+        </p>
+
+        <span>
+            3 min energy reset →
+        </span>
+
+    </div>
+
+</a>
+
+        <!-- =========================
+     MOTIVATION — ACTIVE
+========================== -->
+
+<a
+    href="{{ url_for('motivation_reset') }}"
+    class="reset-option"
+>
+
+    <div class="reset-option-icon">
+        💗
+    </div>
+
+    <div class="reset-option-content">
+
+        <h2>
+            I need motivation
+        </h2>
+
+        <p>
+            Find your next small step
+            and move forward gently.
+        </p>
+
+        <span>
+            Interactive reset →
+        </span>
+
+    </div>
+
+</a>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <div class="reset-footer">
+
+        <span>✧</span>
+
+        <p>
+            You are allowed to pause.
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}

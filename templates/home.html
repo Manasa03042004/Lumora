@@ -1,0 +1,1042 @@
+{% extends "base.html" %}
+
+{% block title %}Lumora — Your Space{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+    /* =========================================================
+       LUMORA HOME PAGE
+    ========================================================= */
+
+    .lumora-home {
+        min-height: 100vh;
+        padding-bottom: 80px;
+    }
+
+
+    /* =========================================================
+       TOP NAVIGATION
+    ========================================================= */
+
+    .lumora-nav {
+        width: min(1100px, calc(100% - 48px));
+        margin: 0 auto;
+        padding: 28px 0 22px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+
+    .nav-logo {
+        text-decoration: none;
+        color: #f2efff;
+
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 4px;
+
+        transition: 0.3s ease;
+    }
+
+
+    .nav-logo:hover {
+        color: #bda7ff;
+    }
+
+
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+    }
+
+
+    .nav-user {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 14px;
+    }
+
+
+    .nav-logout {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 14px;
+
+        transition: 0.3s ease;
+    }
+
+
+    .nav-logout:hover {
+        color: #ffffff;
+    }
+
+
+    /* =========================================================
+       MAIN
+    ========================================================= */
+
+    .home-main {
+        width: min(1100px, calc(100% - 48px));
+        margin: 0 auto;
+    }
+
+
+    /* =========================================================
+       GREETING
+    ========================================================= */
+
+    .greeting-section {
+        padding: 55px 0 45px;
+    }
+
+
+    .cosmic-eyebrow,
+    .section-label {
+        margin: 0 0 12px;
+
+        color: rgba(220, 211, 255, 0.62);
+
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 4px;
+    }
+
+
+    .greeting-section h1 {
+        margin: 0;
+
+        color: #f4f1ff;
+
+        font-size: clamp(40px, 5vw, 64px);
+        font-weight: 500;
+        line-height: 1.1;
+        letter-spacing: -2px;
+    }
+
+
+    .greeting-section h1 span {
+        color: #a98cff;
+        font-size: 0.65em;
+    }
+
+
+    .greeting-section > p:last-child {
+        max-width: 520px;
+        margin: 18px 0 0;
+
+        color: rgba(255, 255, 255, 0.6);
+
+        font-size: 17px;
+        line-height: 1.7;
+    }
+
+
+    /* =========================================================
+       RESET CARD
+    ========================================================= */
+
+    .reset-section {
+        position: relative;
+        overflow: hidden;
+
+        margin: 10px 0 75px;
+        padding: 55px 60px;
+
+        border: 1px solid rgba(171, 142, 255, 0.25);
+        border-radius: 26px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(91, 65, 154, 0.28),
+                rgba(18, 16, 42, 0.4)
+            );
+
+        box-shadow:
+            0 25px 70px rgba(0, 0, 0, 0.2);
+    }
+
+
+    .reset-glow {
+        position: absolute;
+
+        width: 300px;
+        height: 300px;
+
+        right: -80px;
+        top: -100px;
+
+        border-radius: 50%;
+
+        background: rgba(130, 92, 255, 0.13);
+
+        filter: blur(80px);
+    }
+
+
+    .reset-content {
+        position: relative;
+        z-index: 1;
+    }
+
+
+    .reset-star {
+        margin-bottom: 14px;
+
+        color: #c8b5ff;
+
+        font-size: 30px;
+    }
+
+
+    .reset-label {
+        margin: 0 0 10px;
+
+        color: rgba(207, 190, 255, 0.65);
+
+        font-size: 11px;
+        letter-spacing: 3px;
+    }
+
+
+    .reset-content h2 {
+        margin: 0;
+
+        color: #f5f2ff;
+
+        font-size: clamp(30px, 4vw, 46px);
+        font-weight: 500;
+        letter-spacing: -1px;
+    }
+
+
+    .reset-content > p {
+        max-width: 450px;
+
+        margin: 14px 0 28px;
+
+        color: rgba(255, 255, 255, 0.58);
+
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+
+    .reset-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 18px;
+
+        padding: 15px 25px;
+
+        border-radius: 999px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #8166d8,
+                #59429d
+            );
+
+        color: white;
+
+        text-decoration: none;
+
+        font-size: 15px;
+        font-weight: 600;
+
+        box-shadow:
+            0 10px 30px rgba(106, 75, 185, 0.25);
+
+        transition: 0.3s ease;
+    }
+
+
+    .reset-button:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 15px 40px rgba(106, 75, 185, 0.4);
+    }
+
+
+    .reset-button span {
+        font-size: 18px;
+    }
+
+
+    /* =========================================================
+       QUICK SPACE
+    ========================================================= */
+
+    .quick-section {
+        margin-bottom: 85px;
+    }
+
+
+    .quick-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+        gap: 18px;
+    }
+
+
+    .quick-card {
+        min-height: 185px;
+
+        padding: 28px 24px;
+
+        border:
+            1px solid rgba(158, 137, 220, 0.18);
+
+        border-radius: 24px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(43, 36, 77, 0.48),
+                rgba(18, 17, 38, 0.42)
+            );
+
+        text-decoration: none;
+
+        transition:
+            transform 0.3s ease,
+            border-color 0.3s ease,
+            background 0.3s ease;
+    }
+
+
+    .quick-card:hover {
+        transform: translateY(-5px);
+
+        border-color:
+            rgba(177, 150, 255, 0.48);
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(63, 51, 109, 0.62),
+                rgba(24, 21, 48, 0.6)
+            );
+    }
+
+
+    .quick-icon {
+        margin-bottom: 28px;
+
+        font-size: 31px;
+    }
+
+
+    .quick-card h3 {
+        margin: 0 0 10px;
+
+        color: #f2efff;
+
+        font-size: 19px;
+        font-weight: 600;
+    }
+
+
+    .quick-card p {
+        margin: 0;
+
+        color: rgba(255, 255, 255, 0.48);
+
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+
+    /* =========================================================
+       YOUR INNER SPACE
+    ========================================================= */
+
+    .inner-space-section {
+        margin-top: 20px;
+    }
+
+
+    .inner-space-heading {
+        margin-bottom: 28px;
+    }
+
+
+    .inner-space-heading h2 {
+        margin: 0 0 10px;
+
+        color: #f4f1ff;
+
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 500;
+        letter-spacing: -1px;
+    }
+
+
+    .inner-space-heading h2 span {
+        color: #d9c8ff;
+        font-size: 0.75em;
+    }
+
+
+    .inner-space-heading > p:last-child {
+        margin: 0;
+
+        color: rgba(255, 255, 255, 0.55);
+
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+
+    /* =========================================================
+       INNER SPACE CARDS
+    ========================================================= */
+
+    .inner-space-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 20px;
+    }
+
+
+    .inner-space-card {
+        position: relative;
+        overflow: hidden;
+
+        min-height: 340px;
+
+        padding: 32px 28px;
+
+        display: flex;
+        flex-direction: column;
+
+        border: 1px solid rgba(160, 140, 220, 0.2);
+        border-radius: 28px;
+
+        text-decoration: none;
+
+        transition:
+            transform 0.35s ease,
+            border-color 0.35s ease,
+            box-shadow 0.35s ease;
+    }
+
+
+    .inner-space-card:hover {
+        transform: translateY(-6px);
+    }
+
+
+    /* GRATITUDE */
+
+    .gratitude-card {
+        background:
+            radial-gradient(
+                circle at 80% 15%,
+                rgba(255, 222, 132, 0.16),
+                transparent 28%
+            ),
+            linear-gradient(
+                145deg,
+                rgba(80, 60, 128, 0.7),
+                rgba(39, 30, 66, 0.72)
+            );
+    }
+
+
+    .gratitude-card:hover {
+        border-color:
+            rgba(255, 222, 132, 0.55);
+
+        box-shadow:
+            0 20px 55px rgba(247, 205, 102, 0.08);
+    }
+
+
+    /* MANIFESTATION */
+
+    .manifestation-card {
+        background:
+            radial-gradient(
+                circle at 80% 15%,
+                rgba(195, 142, 255, 0.18),
+                transparent 30%
+            ),
+            linear-gradient(
+                145deg,
+                rgba(65, 42, 104, 0.72),
+                rgba(29, 22, 54, 0.75)
+            );
+    }
+
+
+    .manifestation-card:hover {
+        border-color:
+            rgba(190, 145, 255, 0.58);
+
+        box-shadow:
+            0 20px 55px rgba(150, 100, 255, 0.12);
+    }
+
+
+    /* VISION BOARD */
+
+    .vision-card {
+        background:
+            radial-gradient(
+                circle at 75% 18%,
+                rgba(255, 171, 213, 0.13),
+                transparent 30%
+            ),
+            linear-gradient(
+                145deg,
+                rgba(62, 44, 91, 0.72),
+                rgba(25, 21, 48, 0.78)
+            );
+    }
+
+
+    .vision-card:hover {
+        border-color:
+            rgba(255, 176, 220, 0.5);
+
+        box-shadow:
+            0 20px 55px rgba(255, 140, 205, 0.08);
+    }
+
+
+    /* =========================================================
+       CARD CONTENT
+    ========================================================= */
+
+    .inner-card-glow {
+        position: absolute;
+
+        width: 180px;
+        height: 180px;
+
+        top: -90px;
+        right: -70px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(185, 151, 255, 0.15);
+
+        filter: blur(55px);
+    }
+
+
+    .gratitude-card .inner-card-glow {
+        background:
+            rgba(255, 218, 118, 0.18);
+    }
+
+
+    .inner-card-icon {
+        position: relative;
+
+        width: 52px;
+        height: 52px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-bottom: 28px;
+
+        border-radius: 17px;
+
+        background:
+            rgba(255, 255, 255, 0.06);
+
+        border:
+            1px solid rgba(255, 255, 255, 0.1);
+
+        color: #d8c6ff;
+
+        font-size: 23px;
+    }
+
+
+    .gratitude-card .inner-card-icon {
+        color: #ffe49a;
+    }
+
+
+    .vision-card .inner-card-icon {
+        color: #ffb7dd;
+    }
+
+
+    .inner-card-label {
+        margin: 0 0 10px;
+
+        color: rgba(210, 197, 255, 0.58);
+
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 2.5px;
+    }
+
+
+    .gratitude-card .inner-card-label {
+        color: rgba(255, 226, 151, 0.62);
+    }
+
+
+    .inner-space-card h3 {
+        margin: 0 0 14px;
+
+        color: #f5f2ff;
+
+        font-size: 28px;
+        font-weight: 500;
+        letter-spacing: -0.5px;
+    }
+
+
+    .inner-space-card > p:not(.inner-card-label) {
+        margin: 0;
+
+        color: rgba(255, 255, 255, 0.52);
+
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+
+    .inner-card-arrow {
+        margin-top: auto;
+        padding-top: 35px;
+
+        color: rgba(221, 209, 255, 0.85);
+
+        font-size: 14px;
+        font-weight: 500;
+
+        transition: 0.3s ease;
+    }
+
+
+    .gratitude-card .inner-card-arrow {
+        color: #ffe39a;
+    }
+
+
+    .inner-space-card:hover .inner-card-arrow {
+        transform: translateX(5px);
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 900px) {
+
+        .quick-grid {
+            grid-template-columns:
+                repeat(2, 1fr);
+        }
+
+        .inner-space-grid {
+            grid-template-columns:
+                1fr;
+        }
+
+        .inner-space-card {
+            min-height: 280px;
+        }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+        .lumora-nav,
+        .home-main {
+            width: calc(100% - 32px);
+        }
+
+        .lumora-nav {
+            padding-top: 20px;
+        }
+
+        .nav-user {
+            display: none;
+        }
+
+        .greeting-section {
+            padding: 40px 0;
+        }
+
+        .reset-section {
+            padding: 38px 28px;
+            margin-bottom: 60px;
+        }
+
+        .quick-grid {
+            grid-template-columns:
+                1fr;
+        }
+
+        .quick-card {
+            min-height: 150px;
+        }
+
+    }
+
+</style>
+
+
+<section class="lumora-home">
+
+    <!-- TOP NAVIGATION -->
+
+    <nav class="lumora-nav">
+
+        <a href="{{ url_for('home') }}" class="nav-logo">
+            ✦ LUMORA
+        </a>
+
+        <div class="nav-right">
+
+            <span class="nav-user">
+                {{ user.name }}
+            </span>
+
+            <a href="{{ url_for('logout') }}" class="nav-logout">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="home-main">
+
+
+        <!-- GREETING -->
+
+        <section class="greeting-section">
+
+            <p class="cosmic-eyebrow">
+                YOUR LITTLE UNIVERSE
+            </p>
+
+            <h1>
+                Hello, {{ user.name }} <span>✦</span>
+            </h1>
+
+            <p>
+                Take a moment to pause, breathe
+                and return to yourself.
+            </p>
+
+        </section>
+
+
+        <!-- RESET -->
+
+        <section class="reset-section">
+
+            <div class="reset-glow"></div>
+
+            <div class="reset-content">
+
+                <div class="reset-star">
+                    ✦
+                </div>
+
+                <p class="reset-label">
+                    A MOMENT FOR YOU
+                </p>
+
+                <h2>
+                    I NEED A RESET
+                </h2>
+
+                <p>
+                    Whatever you're feeling,
+                    you don't have to carry it alone.
+                </p>
+
+                <a
+                    href="{{ url_for('reset') }}"
+                    class="reset-button"
+                >
+                    Take a moment
+                    <span>→</span>
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- QUICK SPACE -->
+
+        <section class="quick-section">
+
+            <p class="section-label">
+                QUICK SPACE
+            </p>
+
+            <div class="quick-grid">
+
+                <a
+                    href="{{ url_for('breathe') }}"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">🫁</div>
+
+                    <h3>Breathe</h3>
+
+                    <p>
+                        Slow down and reconnect.
+                    </p>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('meditate') }}"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">🧘</div>
+
+                    <h3>Meditate</h3>
+
+                    <p>
+                        Find a quiet moment for yourself.
+                    </p>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('focus_reset') }}"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">🎯</div>
+
+                    <h3>Focus</h3>
+
+                    <p>
+                        Clear your mind and focus again.
+                    </p>
+
+                </a>
+
+
+                <a
+                    href="{{ url_for('pomodoro') }}"
+                    class="quick-card"
+                >
+
+                    <div class="quick-icon">
+                        🍅
+                    </div>
+
+                    <h3>
+                        Pomodoro
+                    </h3>
+
+                    <p>
+                        Work with intention.
+                    </p>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- YOUR INNER SPACE -->
+
+        <section class="inner-space-section">
+
+            <div class="inner-space-heading">
+
+                <p class="section-label">
+                    YOUR INNER SPACE
+                </p>
+
+                <h2>
+                    Create the life you want to live
+                    <span>✦</span>
+                </h2>
+
+                <p>
+                    Pause, reflect, dream and put your
+                    intentions into words.
+                </p>
+
+            </div>
+
+
+            <div class="inner-space-grid">
+
+
+                <!-- GRATITUDE -->
+
+                <a
+                    href="{{ url_for('gratitude') }}"
+                    class="inner-space-card gratitude-card"
+                >
+
+                    <div class="inner-card-glow"></div>
+
+                    <div class="inner-card-icon">
+                        ✦
+                    </div>
+
+                    <p class="inner-card-label">
+                        DAILY REFLECTION
+                    </p>
+
+                    <h3>
+                        Gratitude
+                    </h3>
+
+                    <p>
+                        Notice the little things that make
+                        today beautiful.
+                    </p>
+
+                    <span class="inner-card-arrow">
+                        Open journal →
+                    </span>
+
+                </a>
+
+
+                <!-- MANIFESTATION -->
+
+                <a
+                    href="{{ url_for('manifestation') }}"
+                    class="inner-space-card manifestation-card"
+                >
+
+                    <div class="inner-card-glow"></div>
+
+                    <div class="inner-card-icon">
+                        🔮
+                    </div>
+
+                    <p class="inner-card-label">
+                        SET YOUR INTENTION
+                    </p>
+
+                    <h3>
+                        Manifest
+                    </h3>
+
+                    <p>
+                        Put your dreams into words and give them
+                        a place to grow.
+                    </p>
+
+                    <span class="inner-card-arrow">
+                        Open journal →
+                    </span>
+
+                </a>
+
+
+                <!-- VISION BOARD -->
+
+                <a
+                    href="{{ url_for('vision_board') }}"
+                    class="inner-space-card vision-card"
+                >
+
+                    <div class="inner-card-glow"></div>
+
+                    <div class="inner-card-icon">
+                        ✨
+                    </div>
+
+                    <p class="inner-card-label">
+                        CREATE YOUR FUTURE
+                    </p>
+
+                    <h3>
+                        Vision Board
+                    </h3>
+
+                    <p>
+                        Collect the dreams, places and moments
+                        you want to bring into your life.
+                    </p>
+
+                    <span class="inner-card-arrow">
+                        Build your board →
+                    </span>
+
+                </a>
+
+                <!-- MY DIARY -->
+
+<a
+    href="{{ url_for('diary') }}"
+    class="inner-space-card diary-card"
+>
+
+    <div class="inner-card-glow"></div>
+
+    <div class="inner-card-icon">
+        📖
+    </div>
+
+    <p class="inner-card-label">
+        YOUR WEEK IN WORDS
+    </p>
+
+    <h3>
+        My Diary
+    </h3>
+
+    <p>
+        Look back at your gratitude and manifestations,
+        beautifully collected week by week.
+    </p>
+
+    <span class="inner-card-arrow">
+        Open diary →
+    </span>
+
+</a>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</section>
+
+{% endblock %}

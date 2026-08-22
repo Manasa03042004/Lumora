@@ -1,0 +1,450 @@
+{% extends "base.html" %}
+
+{% block title %}Lumora — Overwhelmed Reset{% endblock %}
+
+{% block content %}
+
+<section class="exercise-page">
+
+    <a href="{{ url_for('reset') }}" class="back-link">
+        ← Back to reset center
+    </a>
+
+
+    <div class="exercise-container">
+
+        <p class="cosmic-eyebrow">
+            5 MINUTE OVERWHELMED RESET
+        </p>
+
+
+        <h1>
+            Let's make things feel smaller.
+        </h1>
+
+
+        <p class="exercise-intro">
+            You don't have to handle everything right now.
+            <br>
+            Just this moment.
+        </p>
+
+
+        <!-- BREATHING / RESET VISUAL -->
+
+        <div class="breathing-area">
+
+            <div class="breathing-ring">
+
+                <div class="breathing-circle">
+
+                    <span id="reset-text">
+                        Get ready
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TIMER -->
+
+        <div
+            id="timer"
+            class="exercise-timer"
+        >
+            05:00
+        </div>
+
+
+        <!-- CURRENT STEP -->
+
+        <div class="exercise-step">
+
+            <p class="step-label">
+                RIGHT NOW
+            </p>
+
+
+            <h2 id="step-title">
+                Give yourself permission to pause.
+            </h2>
+
+
+            <p id="step-description">
+
+                Nothing needs to be solved yet.
+                Take a moment to simply arrive here.
+
+            </p>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+
+        <div class="exercise-controls">
+
+            <button
+                id="start-button"
+                class="exercise-button"
+                onclick="startOverwhelmedReset()"
+            >
+                Begin
+                <span>→</span>
+            </button>
+
+
+            <button
+                id="pause-button"
+                class="exercise-secondary-button"
+                onclick="togglePause()"
+                style="display: none;"
+            >
+                Pause
+            </button>
+
+        </div>
+
+
+        <p class="exercise-note">
+            ✦ You only need to take one moment at a time.
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+let totalSeconds = 300;
+let remainingSeconds = totalSeconds;
+
+let timerInterval = null;
+
+let running = false;
+let paused = false;
+let finished = false;
+
+
+/* =========================
+   FORMAT TIME
+========================= */
+
+function formatTime(seconds) {
+
+    const minutes = Math.floor(seconds / 60);
+
+    const secs = seconds % 60;
+
+    return (
+        String(minutes).padStart(2, "0")
+        + ":"
+        + String(secs).padStart(2, "0")
+    );
+
+}
+
+
+/* =========================
+   UPDATE TIMER
+========================= */
+
+function updateTimer() {
+
+    document.getElementById("timer").textContent =
+        formatTime(remainingSeconds);
+
+}
+
+
+/* =========================
+   START RESET
+========================= */
+
+function startOverwhelmedReset() {
+
+    if (running || finished) {
+        return;
+    }
+
+    running = true;
+    paused = false;
+
+    document.getElementById("start-button").style.display = "none";
+
+    document.getElementById("pause-button").style.display =
+        "inline-flex";
+
+    updateStep();
+
+    timerInterval = setInterval(function () {
+
+        if (!paused) {
+
+            remainingSeconds--;
+
+            updateTimer();
+
+            updateStep();
+
+
+            if (remainingSeconds <= 0) {
+
+                clearInterval(timerInterval);
+
+                running = false;
+
+                finished = true;
+
+                finishReset();
+
+            }
+
+        }
+
+    }, 1000);
+
+}
+
+
+/* =========================
+   PAUSE / RESUME
+========================= */
+
+function togglePause() {
+
+    if (!running || finished) {
+        return;
+    }
+
+    paused = !paused;
+
+    const pauseButton =
+        document.getElementById("pause-button");
+
+    if (paused) {
+
+        pauseButton.textContent = "Resume";
+
+        document.getElementById("step-title").textContent =
+            "Take all the time you need.";
+
+        document.getElementById("step-description").textContent =
+            "There's no need to rush this moment. Resume when you're ready.";
+
+        document.getElementById("reset-text").textContent =
+            "Paused";
+
+    }
+
+    else {
+
+        pauseButton.textContent = "Pause";
+
+        updateStep();
+
+    }
+
+}
+
+
+/* =========================
+   GUIDED STEPS
+========================= */
+
+function updateStep() {
+
+    if (paused || finished) {
+        return;
+    }
+
+    const elapsed =
+        totalSeconds - remainingSeconds;
+
+
+    const title =
+        document.getElementById("step-title");
+
+    const description =
+        document.getElementById("step-description");
+
+    const resetText =
+        document.getElementById("reset-text");
+
+
+    /* =========================
+       STEP 1 — 0 to 60 sec
+       BREATHE
+    ========================= */
+
+    if (elapsed < 60) {
+
+        title.textContent =
+            "Slow everything down.";
+
+        description.textContent =
+            "Take a slow breath in. " +
+            "Then let it leave gently. " +
+            "Nothing else needs your attention right now.";
+
+        resetText.textContent =
+            "Breathe";
+
+        resetText.className =
+            "breathe-animation";
+
+    }
+
+
+    /* =========================
+       STEP 2 — 60 to 120 sec
+       NOTICE
+    ========================= */
+
+    else if (elapsed < 120) {
+
+        title.textContent =
+            "Notice what is filling your mind.";
+
+        description.textContent =
+            "You don't need to fix it. " +
+            "Just quietly notice the thoughts, tasks and worries that are competing for your attention.";
+
+        resetText.textContent =
+            "Notice";
+
+        resetText.className =
+            "";
+
+    }
+
+
+    /* =========================
+       STEP 3 — 120 to 180 sec
+       GROUND
+    ========================= */
+
+    else if (elapsed < 180) {
+
+        title.textContent =
+            "Come back to where you are.";
+
+        description.textContent =
+            "Notice three things you can see, " +
+            "two things you can hear, " +
+            "and one thing you can physically feel.";
+
+        resetText.textContent =
+            "Ground";
+
+        resetText.className =
+            "";
+
+    }
+
+
+    /* =========================
+       STEP 4 — 180 to 240 sec
+       RELEASE
+    ========================= */
+
+    else if (elapsed < 240) {
+
+        title.textContent =
+            "You don't have to carry it all at once.";
+
+        description.textContent =
+            "Let go of the pressure to solve everything today. " +
+            "For now, allow the rest to wait.";
+
+        resetText.textContent =
+            "Release";
+
+        resetText.className =
+            "";
+
+    }
+
+
+    /* =========================
+       STEP 5 — 240 to 300 sec
+       ONE STEP
+    ========================= */
+
+    else {
+
+        title.textContent =
+            "Choose one small next step.";
+
+        description.textContent =
+            "Ask yourself: What is one small thing I can do next? " +
+            "Not everything. Just one thing.";
+
+        resetText.textContent =
+            "One step";
+
+        resetText.className =
+            "";
+
+    }
+
+}
+
+
+/* =========================
+   FINISH RESET
+========================= */
+
+function finishReset() {
+
+    document.getElementById("step-title").textContent =
+        "You don't have to do everything at once. ✦";
+
+    document.getElementById("step-description").textContent =
+        "One small step is enough for now. " +
+        "You can return whenever the world feels too loud.";
+
+    document.getElementById("reset-text").textContent =
+        "✦";
+
+    document.getElementById("reset-text").className =
+        "";
+
+    document.getElementById("timer").textContent =
+        "Complete";
+
+
+    document.getElementById("pause-button").style.display =
+        "none";
+
+
+    const startButton =
+        document.getElementById("start-button");
+
+    startButton.style.display =
+        "inline-flex";
+
+    startButton.innerHTML =
+        "Return to Reset Center →";
+
+    startButton.onclick =
+        function () {
+
+            window.location.href =
+                "{{ url_for('reset') }}";
+
+        };
+
+}
+
+</script>
+
+{% endblock %}

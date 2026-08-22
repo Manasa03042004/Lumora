@@ -1,0 +1,1478 @@
+{% extends "base.html" %}
+
+{% block title %}Lumora — Meditate{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+/* =========================================================
+   LUMORA MEDITATE PAGE
+   Page-specific styling — will not affect other pages
+========================================================= */
+
+.lm-meditate-page {
+    min-height: 100vh;
+    padding: 55px 8%;
+    position: relative;
+}
+
+
+/* =========================================================
+   BACK LINK
+========================================================= */
+
+.lm-meditate-page .lm-back-link {
+    display: inline-flex;
+    align-items: center;
+
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+
+    font-size: 14px;
+
+    transition: 0.3s ease;
+}
+
+.lm-meditate-page .lm-back-link:hover {
+    color: #ffffff;
+    transform: translateX(-4px);
+}
+
+
+/* =========================================================
+   COMMON SCREEN
+========================================================= */
+
+.lm-meditate-page .lm-screen {
+    width: 100%;
+    max-width: 680px;
+
+    margin: 0 auto;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   SETUP SCREEN
+========================================================= */
+
+.lm-meditate-page .lm-setup-screen {
+    min-height: calc(100vh - 110px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 35px 0 65px;
+}
+
+
+/* Small star */
+
+.lm-meditate-page .lm-small-star {
+    font-size: 34px;
+
+    margin-bottom: 18px;
+
+    animation: lmStarGlow 3s ease-in-out infinite;
+}
+
+
+/* Main heading */
+
+.lm-meditate-page .lm-setup-screen h1 {
+    margin: 18px 0;
+
+    font-size: clamp(46px, 6vw, 78px);
+    font-weight: 300;
+
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+
+    color: #ffffff;
+}
+
+
+/* Intro */
+
+.lm-meditate-page .lm-intro {
+    max-width: 540px;
+
+    margin: 0 auto;
+
+    color: rgba(255, 255, 255, 0.58);
+
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.lm-meditate-page .lm-eyebrow {
+    margin: 0 0 16px;
+
+    font-size: 11px;
+    letter-spacing: 4px;
+
+    text-transform: uppercase;
+
+    color: rgba(255, 255, 255, 0.48);
+}
+
+
+/* =========================================================
+   DURATION SECTION
+========================================================= */
+
+.lm-meditate-page .lm-duration-section {
+    width: 100%;
+
+    margin-top: 48px;
+}
+
+
+.lm-meditate-page .lm-duration-label {
+    margin: 0 0 20px;
+
+    font-size: 11px;
+    letter-spacing: 4px;
+
+    color: rgba(255, 255, 255, 0.48);
+}
+
+
+.lm-meditate-page .lm-duration-options {
+    display: flex;
+
+    justify-content: center;
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+
+/* Duration buttons */
+
+.lm-meditate-page .lm-duration-button {
+    width: 105px;
+    height: 90px;
+
+    padding: 0;
+
+    border-radius: 20px;
+
+    border:
+        1px solid
+        rgba(180, 160, 255, 0.16);
+
+    background:
+        rgba(255, 255, 255, 0.035);
+
+    color:
+        rgba(255, 255, 255, 0.7);
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.lm-meditate-page .lm-duration-button:hover {
+    transform: translateY(-5px);
+
+    border-color:
+        rgba(190, 165, 255, 0.5);
+
+    background:
+        rgba(130, 100, 230, 0.08);
+}
+
+
+.lm-meditate-page .lm-duration-button.active {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(140, 105, 255, 0.8),
+            rgba(90, 70, 190, 0.8)
+        );
+
+    border-color:
+        rgba(210, 195, 255, 0.7);
+
+    box-shadow:
+        0 10px 35px
+        rgba(105, 70, 230, 0.28);
+
+    color: #ffffff;
+}
+
+
+.lm-meditate-page .lm-duration-number {
+    display: block;
+
+    font-size: 26px;
+    font-weight: 500;
+
+    line-height: 1;
+
+    margin-bottom: 7px;
+}
+
+
+.lm-meditate-page .lm-duration-unit {
+    display: block;
+
+    font-size: 12px;
+
+    opacity: 0.6;
+}
+
+
+.lm-meditate-page .lm-duration-button.active
+.lm-duration-unit {
+    opacity: 0.8;
+}
+
+
+/* =========================================================
+   BEGIN BUTTON
+========================================================= */
+
+.lm-meditate-page .lm-begin-button {
+    margin-top: 42px;
+
+    min-width: 235px;
+
+    padding: 16px 28px;
+
+    border: none;
+    border-radius: 100px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8365df,
+            #56449e
+        );
+
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 12px 35px
+        rgba(110, 75, 220, 0.25);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.lm-meditate-page .lm-begin-button span {
+    margin-left: 10px;
+}
+
+
+.lm-meditate-page .lm-begin-button:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 18px 45px
+        rgba(110, 75, 220, 0.4);
+}
+
+
+.lm-meditate-page .lm-begin-button:active {
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   AUDIO NOTE
+========================================================= */
+
+.lm-meditate-page .lm-note {
+    max-width: 450px;
+
+    margin: 28px auto 0;
+
+    color:
+        rgba(255, 255, 255, 0.42);
+
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   ACTIVE MEDITATION SCREEN
+========================================================= */
+
+.lm-meditate-page .lm-active-screen {
+    min-height: calc(100vh - 110px);
+
+    display: none;
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 35px 0 65px;
+}
+
+
+.lm-meditate-page .lm-active-screen.active {
+    display: flex;
+
+    animation:
+        lmAppear 0.7s ease;
+}
+
+
+/* Timer */
+
+.lm-meditate-page .lm-timer {
+    margin-bottom: 42px;
+
+    font-size: 15px;
+
+    letter-spacing: 4px;
+
+    color:
+        rgba(255, 255, 255, 0.48);
+}
+
+
+/* =========================================================
+   SUBTLE STAR VISUAL
+   Not a giant circle/orb
+========================================================= */
+
+.lm-meditate-page .lm-session-star {
+    position: relative;
+
+    width: 95px;
+    height: 95px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 38px;
+}
+
+
+.lm-meditate-page .lm-session-star::before {
+    content: "";
+
+    position: absolute;
+
+    width: 95px;
+    height: 95px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        rgba(185, 165, 255, 0.14);
+
+    box-shadow:
+        0 0 45px
+        rgba(120, 90, 220, 0.1);
+}
+
+
+.lm-meditate-page .lm-session-star span {
+    position: relative;
+
+    font-size: 32px;
+
+    color: #e5dcff;
+
+    text-shadow:
+        0 0 25px
+        rgba(190, 165, 255, 0.65);
+
+    animation:
+        lmStarPulse 3s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   GUIDANCE
+========================================================= */
+
+.lm-meditate-page .lm-guidance-label {
+    margin: 0 0 16px;
+
+    font-size: 11px;
+    letter-spacing: 4px;
+
+    color:
+        rgba(255, 255, 255, 0.42);
+}
+
+
+.lm-meditate-page .lm-guidance h2 {
+    max-width: 620px;
+
+    margin: 0 auto 18px;
+
+    font-size: clamp(38px, 5vw, 58px);
+    font-weight: 300;
+
+    line-height: 1.12;
+
+    color: #ffffff;
+}
+
+
+.lm-meditate-page .lm-guidance-text {
+    max-width: 540px;
+
+    margin: 0 auto;
+
+    color:
+        rgba(255, 255, 255, 0.58);
+
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   CONTROLS
+========================================================= */
+
+.lm-meditate-page .lm-controls {
+    display: flex;
+
+    justify-content: center;
+    gap: 12px;
+
+    margin-top: 42px;
+}
+
+
+.lm-meditate-page .lm-pause-button,
+.lm-meditate-page .lm-end-button {
+    padding: 13px 26px;
+
+    border-radius: 100px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+
+.lm-meditate-page .lm-pause-button {
+    border:
+        1px solid
+        rgba(190, 165, 255, 0.22);
+
+    background:
+        rgba(130, 100, 230, 0.12);
+
+    color:
+        rgba(255, 255, 255, 0.85);
+}
+
+
+.lm-meditate-page .lm-pause-button:hover {
+    transform: translateY(-3px);
+
+    background:
+        rgba(130, 100, 230, 0.2);
+}
+
+
+.lm-meditate-page .lm-end-button {
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.12);
+
+    background:
+        transparent;
+
+    color:
+        rgba(255, 255, 255, 0.55);
+}
+
+
+.lm-meditate-page .lm-end-button:hover {
+    transform: translateY(-3px);
+
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.05);
+}
+
+
+.lm-meditate-page .lm-close-note {
+    margin-top: 28px;
+
+    color:
+        rgba(255, 255, 255, 0.36);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   COMPLETION SCREEN
+========================================================= */
+
+.lm-meditate-page .lm-complete-screen {
+    min-height: calc(100vh - 110px);
+
+    display: none;
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 35px 0 65px;
+
+    animation:
+        lmAppear 0.7s ease;
+}
+
+
+.lm-meditate-page .lm-complete-star {
+    margin-bottom: 22px;
+
+    font-size: 42px;
+
+    color: #e5dcff;
+
+    text-shadow:
+        0 0 30px
+        rgba(190, 165, 255, 0.65);
+}
+
+
+.lm-meditate-page .lm-complete-screen h1 {
+    margin: 18px 0;
+
+    font-size: clamp(42px, 5vw, 66px);
+    font-weight: 300;
+
+    line-height: 1.1;
+
+    color: #ffffff;
+}
+
+
+.lm-meditate-page .lm-complete-text {
+    color:
+        rgba(255, 255, 255, 0.58);
+
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes lmStarGlow {
+
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: translateY(-6px);
+        opacity: 1;
+    }
+
+}
+
+
+@keyframes lmStarPulse {
+
+    0%,
+    100% {
+        transform: scale(0.92);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+
+}
+
+
+@keyframes lmAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+    .lm-meditate-page {
+        padding: 30px 6%;
+    }
+
+    .lm-meditate-page .lm-setup-screen,
+    .lm-meditate-page .lm-active-screen,
+    .lm-meditate-page .lm-complete-screen {
+        min-height: calc(100vh - 60px);
+    }
+
+    .lm-meditate-page .lm-duration-options {
+        gap: 8px;
+    }
+
+    .lm-meditate-page .lm-duration-button {
+        width: 72px;
+        height: 78px;
+    }
+
+    .lm-meditate-page .lm-duration-number {
+        font-size: 20px;
+    }
+
+    .lm-meditate-page .lm-setup-screen h1 {
+        font-size: 46px;
+    }
+
+}
+
+</style>
+
+
+<section class="lm-meditate-page">
+
+
+    <!-- BACK -->
+
+    <a href="{{ url_for('home') }}" class="lm-back-link">
+        ← Back to your space
+    </a>
+
+
+    <!-- =====================================================
+         SETUP SCREEN
+    ====================================================== -->
+
+    <div
+        id="meditation-setup"
+        class="lm-screen lm-setup-screen"
+    >
+
+        <div class="lm-small-star">
+            ✦
+        </div>
+
+        <p class="lm-eyebrow">
+            GUIDED MEDITATION
+        </p>
+
+        <h1>
+            Take a moment for yourself.
+        </h1>
+
+        <p class="lm-intro">
+            Choose how much time you have.
+            <br>
+            We'll guide you from there.
+        </p>
+
+
+        <!-- DURATION -->
+
+        <div class="lm-duration-section">
+
+            <p class="lm-duration-label">
+                HOW MUCH TIME DO YOU HAVE?
+            </p>
+
+            <div class="lm-duration-options">
+
+                <button
+                    class="lm-duration-button"
+                    data-minutes="1"
+                    onclick="selectDuration(1)"
+                >
+                    <span class="lm-duration-number">1</span>
+                    <span class="lm-duration-unit">minute</span>
+                </button>
+
+
+                <button
+                    class="lm-duration-button active"
+                    data-minutes="3"
+                    onclick="selectDuration(3)"
+                >
+                    <span class="lm-duration-number">3</span>
+                    <span class="lm-duration-unit">minutes</span>
+                </button>
+
+
+                <button
+                    class="lm-duration-button"
+                    data-minutes="5"
+                    onclick="selectDuration(5)"
+                >
+                    <span class="lm-duration-number">5</span>
+                    <span class="lm-duration-unit">minutes</span>
+                </button>
+
+
+                <button
+                    class="lm-duration-button"
+                    data-minutes="10"
+                    onclick="selectDuration(10)"
+                >
+                    <span class="lm-duration-number">10</span>
+                    <span class="lm-duration-unit">minutes</span>
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- BEGIN -->
+
+        <button
+            id="begin-meditation"
+            class="lm-begin-button"
+            onclick="startMeditation()"
+        >
+            Begin meditation
+            <span>→</span>
+        </button>
+
+
+        <p class="lm-note">
+            🎧 Keep your volume comfortable.
+            When the meditation begins, you can close your eyes.
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         ACTIVE MEDITATION
+    ====================================================== -->
+
+    <div
+        id="meditation-active"
+        class="lm-screen lm-active-screen"
+    >
+
+        <div
+            id="meditation-timer"
+            class="lm-timer"
+        >
+            03:00
+        </div>
+
+
+        <!-- Small subtle visual, not a giant orb -->
+
+        <div class="lm-session-star">
+            <span>✦</span>
+        </div>
+
+
+        <div class="lm-guidance">
+
+            <p class="lm-guidance-label">
+                JUST BE HERE
+            </p>
+
+            <h2 id="meditation-title">
+                Get comfortable.
+            </h2>
+
+            <p
+                id="meditation-text"
+                class="lm-guidance-text"
+            >
+                Find a comfortable position and allow yourself to settle.
+            </p>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+
+        <div class="lm-controls">
+
+            <button
+                id="pause-meditation"
+                class="lm-pause-button"
+                onclick="toggleMeditationPause()"
+            >
+                Pause
+            </button>
+
+
+            <button
+                class="lm-end-button"
+                onclick="endMeditation()"
+            >
+                End
+            </button>
+
+        </div>
+
+
+        <p class="lm-close-note">
+            ✦ You don't need to watch the screen. Just listen.
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         COMPLETION SCREEN
+    ====================================================== -->
+
+    <div
+        id="meditation-complete"
+        class="lm-screen lm-complete-screen"
+    >
+
+        <div class="lm-complete-star">
+            ✦
+        </div>
+
+        <p class="lm-eyebrow">
+            MEDITATION COMPLETE
+        </p>
+
+        <h1>
+            You gave yourself a moment.
+        </h1>
+
+        <p class="lm-complete-text">
+            Take your time before returning.
+            <br>
+            Carry a little of this calm with you.
+        </p>
+
+
+        <button
+            class="lm-begin-button"
+            onclick="returnHome()"
+        >
+            Return to your space
+            <span>→</span>
+        </button>
+
+    </div>
+
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let selectedMinutes = 3;
+let totalSeconds = 180;
+let remainingSeconds = 180;
+
+let meditationInterval = null;
+
+let meditationRunning = false;
+let meditationPaused = false;
+
+let availableVoices = [];
+let currentSpeech = null;
+
+
+/* =========================================================
+   LOAD VOICES
+========================================================= */
+
+function loadVoices() {
+
+    availableVoices =
+        window.speechSynthesis.getVoices();
+
+}
+
+loadVoices();
+
+window.speechSynthesis.onvoiceschanged =
+    loadVoices;
+
+
+/* =========================================================
+   SELECT DURATION
+========================================================= */
+
+function selectDuration(minutes) {
+
+    if (meditationRunning) {
+        return;
+    }
+
+    selectedMinutes = minutes;
+
+    totalSeconds =
+        selectedMinutes * 60;
+
+    remainingSeconds =
+        totalSeconds;
+
+
+    document
+        .querySelectorAll(".lm-duration-button")
+        .forEach(function (button) {
+
+            button.classList.remove("active");
+
+        });
+
+
+    const selectedButton =
+        document.querySelector(
+            `.lm-duration-button[data-minutes="${minutes}"]`
+        );
+
+    if (selectedButton) {
+
+        selectedButton.classList.add("active");
+
+    }
+
+}
+
+
+/* =========================================================
+   FORMAT TIMER
+========================================================= */
+
+function formatTime(seconds) {
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    const secondsLeft =
+        seconds % 60;
+
+    return (
+        String(minutes).padStart(2, "0")
+        + ":"
+        + String(secondsLeft).padStart(2, "0")
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE TIMER
+========================================================= */
+
+function updateTimer() {
+
+    document
+        .getElementById("meditation-timer")
+        .textContent =
+        formatTime(remainingSeconds);
+
+}
+
+
+/* =========================================================
+   SPEAK
+========================================================= */
+
+function speak(text) {
+
+    if (!("speechSynthesis" in window)) {
+        return;
+    }
+
+
+    window.speechSynthesis.cancel();
+
+
+    currentSpeech =
+        new SpeechSynthesisUtterance(text);
+
+
+    currentSpeech.rate = 0.82;
+
+    currentSpeech.pitch = 1.15;
+
+    currentSpeech.volume = 0.9;
+
+
+    const preferredVoice =
+        availableVoices.find(function (voice) {
+
+            const name =
+                voice.name.toLowerCase();
+
+            return (
+                voice.lang.startsWith("en")
+                &&
+                (
+                    name.includes("zira")
+                    ||
+                    name.includes("aria")
+                    ||
+                    name.includes("samantha")
+                    ||
+                    name.includes("female")
+                )
+            );
+
+        });
+
+
+    if (preferredVoice) {
+
+        currentSpeech.voice =
+            preferredVoice;
+
+    }
+
+
+    window.speechSynthesis.speak(
+        currentSpeech
+    );
+
+}
+
+
+/* =========================================================
+   START MEDITATION
+========================================================= */
+
+function startMeditation() {
+
+    meditationRunning = true;
+    meditationPaused = false;
+
+    remainingSeconds =
+        selectedMinutes * 60;
+
+
+    document
+        .getElementById("meditation-setup")
+        .style.display =
+        "none";
+
+
+    const activeScreen =
+        document.getElementById(
+            "meditation-active"
+        );
+
+
+    activeScreen.style.display =
+        "flex";
+
+
+    activeScreen.classList.add(
+        "active"
+    );
+
+
+    updateTimer();
+
+
+    updateMeditationGuidance();
+
+
+    meditationInterval =
+        setInterval(function () {
+
+            if (meditationPaused) {
+                return;
+            }
+
+
+            remainingSeconds--;
+
+            updateTimer();
+
+            updateMeditationGuidance();
+
+
+            if (remainingSeconds <= 0) {
+
+                clearInterval(
+                    meditationInterval
+                );
+
+                completeMeditation();
+
+            }
+
+        }, 1000);
+
+}
+
+
+/* =========================================================
+   GUIDANCE
+========================================================= */
+
+function updateMeditationGuidance() {
+
+    if (meditationPaused) {
+        return;
+    }
+
+
+    const elapsed =
+        totalSeconds - remainingSeconds;
+
+
+    const title =
+        document.getElementById(
+            "meditation-title"
+        );
+
+
+    const text =
+        document.getElementById(
+            "meditation-text"
+        );
+
+
+    /*
+       The meditation is divided according
+       to the percentage of time completed.
+    */
+
+
+    if (elapsed < totalSeconds * 0.20) {
+
+        title.textContent =
+            "Get comfortable.";
+
+        text.textContent =
+            "Allow your shoulders to soften. " +
+            "There is nowhere else you need to be.";
+
+        if (elapsed === 0) {
+
+            speak(
+                "Get comfortable. " +
+                "Allow your shoulders to soften. " +
+                "There is nowhere else you need to be."
+            );
+
+        }
+
+    }
+
+
+    else if (elapsed < totalSeconds * 0.45) {
+
+        title.textContent =
+            "Notice your breath.";
+
+        text.textContent =
+            "There is nothing to change. " +
+            "Simply notice the natural rhythm of your breathing.";
+
+        if (
+            Math.abs(
+                elapsed - Math.floor(totalSeconds * 0.20)
+            ) <= 1
+        ) {
+
+            speak(
+                "Now, notice your breath. " +
+                "There is nothing to change. " +
+                "Simply notice the natural rhythm of your breathing."
+            );
+
+        }
+
+    }
+
+
+    else if (elapsed < totalSeconds * 0.70) {
+
+        title.textContent =
+            "Let thoughts pass.";
+
+        text.textContent =
+            "If a thought appears, notice it gently. " +
+            "Then allow it to pass without following it.";
+
+        if (
+            Math.abs(
+                elapsed - Math.floor(totalSeconds * 0.45)
+            ) <= 1
+        ) {
+
+            speak(
+                "If a thought appears, notice it gently. " +
+                "Then allow it to pass without following it."
+            );
+
+        }
+
+    }
+
+
+    else if (elapsed < totalSeconds * 0.90) {
+
+        title.textContent =
+            "Come back to this moment.";
+
+        text.textContent =
+            "Feel yourself here. " +
+            "Feel the breath, the stillness, and this quiet moment.";
+
+        if (
+            Math.abs(
+                elapsed - Math.floor(totalSeconds * 0.70)
+            ) <= 1
+        ) {
+
+            speak(
+                "Come back to this moment. " +
+                "Feel the breath, the stillness, and this quiet moment."
+            );
+
+        }
+
+    }
+
+
+    else {
+
+        title.textContent =
+            "Take this calm with you.";
+
+        text.textContent =
+            "You can return to this feeling whenever you need a moment.";
+
+        if (
+            Math.abs(
+                elapsed - Math.floor(totalSeconds * 0.90)
+            ) <= 1
+        ) {
+
+            speak(
+                "Take this calm with you. " +
+                "You can return to this feeling whenever you need a moment."
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   PAUSE / RESUME
+========================================================= */
+
+function toggleMeditationPause() {
+
+    const button =
+        document.getElementById(
+            "pause-meditation"
+        );
+
+
+    if (!meditationPaused) {
+
+        meditationPaused = true;
+
+        window.speechSynthesis.cancel();
+
+        button.textContent =
+            "Resume";
+
+
+        document
+            .getElementById("meditation-title")
+            .textContent =
+            "Take your time.";
+
+
+        document
+            .getElementById("meditation-text")
+            .textContent =
+            "Resume whenever you are ready.";
+
+    }
+
+
+    else {
+
+        meditationPaused = false;
+
+        button.textContent =
+            "Pause";
+
+        updateMeditationGuidance();
+
+    }
+
+}
+
+
+/* =========================================================
+   END MEDITATION
+========================================================= */
+
+function endMeditation() {
+
+    clearInterval(
+        meditationInterval
+    );
+
+
+    window.speechSynthesis.cancel();
+
+
+    meditationRunning = false;
+    meditationPaused = false;
+
+
+    document
+        .getElementById("meditation-active")
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById("meditation-active")
+        .classList.remove(
+            "active"
+        );
+
+
+    document
+        .getElementById("meditation-setup")
+        .style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   COMPLETE
+========================================================= */
+
+function completeMeditation() {
+
+    meditationRunning = false;
+
+    window.speechSynthesis.cancel();
+
+
+    speak(
+        "Your meditation is complete. " +
+        "Take your time before returning."
+    );
+
+
+    document
+        .getElementById("meditation-active")
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById("meditation-active")
+        .classList.remove(
+            "active"
+        );
+
+
+    document
+        .getElementById("meditation-complete")
+        .style.display =
+        "flex";
+
+}
+
+
+/* =========================================================
+   RETURN HOME
+========================================================= */
+
+function returnHome() {
+
+    window.location.href =
+        "{{ url_for('home') }}";
+
+}
+
+
+/* =========================================================
+   CLEAN UP VOICE
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    function () {
+
+        window.speechSynthesis.cancel();
+
+    }
+);
+
+</script>
+
+{% endblock %}

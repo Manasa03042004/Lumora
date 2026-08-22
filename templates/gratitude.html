@@ -1,0 +1,793 @@
+{% extends "base.html" %}
+
+{% block title %}
+Lumora — Gratitude Journal
+{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+    /* =========================================
+       GRATITUDE PAGE
+    ========================================= */
+
+    .gj-page {
+        min-height: 100vh;
+        padding: 32px 20px 60px;
+        position: relative;
+        overflow: hidden;
+
+        background:
+            radial-gradient(
+                circle at 12% 12%,
+                rgba(255, 221, 117, 0.13),
+                transparent 24%
+            ),
+            radial-gradient(
+                circle at 88% 25%,
+                rgba(151, 108, 255, 0.16),
+                transparent 30%
+            ),
+            linear-gradient(
+                135deg,
+                #100c22 0%,
+                #1a1235 50%,
+                #120d25 100%
+            );
+    }
+
+
+    .gj-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+
+        background-image:
+            radial-gradient(
+                circle,
+                rgba(255, 230, 145, 0.5) 1px,
+                transparent 1.5px
+            );
+
+        background-size: 90px 90px;
+        opacity: 0.15;
+    }
+
+
+    /* =========================================
+       SPARKLES
+    ========================================= */
+
+    .gj-sparkles {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+
+    .gj-sparkle {
+        position: absolute;
+        color: #ffe89b;
+        text-shadow: 0 0 16px rgba(255, 225, 120, 0.6);
+
+        animation: gjFloat 5s ease-in-out infinite;
+    }
+
+
+    .gj-sparkle:nth-child(1) {
+        top: 8%;
+        left: 8%;
+        font-size: 18px;
+    }
+
+
+    .gj-sparkle:nth-child(2) {
+        top: 18%;
+        right: 10%;
+        font-size: 14px;
+        animation-delay: 1s;
+    }
+
+
+    .gj-sparkle:nth-child(3) {
+        top: 52%;
+        left: 5%;
+        font-size: 18px;
+        animation-delay: 2s;
+    }
+
+
+    .gj-sparkle:nth-child(4) {
+        bottom: 18%;
+        right: 8%;
+        font-size: 17px;
+        animation-delay: 0.5s;
+    }
+
+
+    .gj-sparkle:nth-child(5) {
+        bottom: 8%;
+        left: 14%;
+        font-size: 13px;
+        animation-delay: 2.5s;
+    }
+
+
+    /* =========================================
+       CONTENT
+    ========================================= */
+
+    .gj-content {
+        width: min(100%, 850px);
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+
+
+    .gj-back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        margin-bottom: 32px;
+
+        color: rgba(255, 255, 255, 0.58);
+        text-decoration: none;
+
+        font-size: 14px;
+
+        transition: 0.25s ease;
+    }
+
+
+    .gj-back-link:hover {
+        color: #ffe79d;
+        transform: translateX(-4px);
+    }
+
+
+    /* =========================================
+       HEADER
+    ========================================= */
+
+    .gj-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+
+    .gj-main-star {
+        width: 58px;
+        height: 58px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin: 0 auto 16px;
+
+        border-radius: 50%;
+
+        color: #ffe99e;
+        font-size: 25px;
+
+        background:
+            radial-gradient(
+                circle,
+                rgba(255, 222, 120, 0.20),
+                rgba(150, 100, 255, 0.08)
+            );
+
+        border: 1px solid rgba(255, 225, 140, 0.2);
+
+        box-shadow:
+            0 0 35px rgba(255, 220, 110, 0.12),
+            0 0 60px rgba(145, 95, 255, 0.10);
+    }
+
+
+    .gj-eyebrow {
+        margin: 0 0 10px;
+
+        color: rgba(255, 226, 145, 0.78);
+
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 3px;
+    }
+
+
+    .gj-header h1 {
+        margin: 0;
+
+        color: #f8f5ff;
+
+        font-size: clamp(38px, 6vw, 60px);
+        font-weight: 500;
+
+        letter-spacing: -1.5px;
+    }
+
+
+    .gj-header h1 span {
+        color: #ffe49a;
+    }
+
+
+    .gj-subtitle {
+        width: min(100%, 560px);
+
+        margin: 14px auto 0;
+
+        color: rgba(255, 255, 255, 0.55);
+
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+
+    /* =========================================
+       DATE
+    ========================================= */
+
+    .gj-date {
+        width: fit-content;
+
+        margin: 0 auto 22px;
+        padding: 8px 17px;
+
+        border-radius: 100px;
+
+        color: rgba(255, 235, 175, 0.88);
+
+        background: rgba(255, 255, 255, 0.05);
+
+        border: 1px solid rgba(255, 225, 140, 0.13);
+
+        font-size: 13px;
+    }
+
+
+    /* =========================================
+       JOURNAL CARD
+    ========================================= */
+
+    .gj-journal {
+        padding: 30px 34px 32px;
+
+        border-radius: 26px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.07),
+                rgba(255, 255, 255, 0.025)
+            );
+
+        border: 1px solid rgba(255, 255, 255, 0.10);
+
+        box-shadow:
+            0 25px 70px rgba(0, 0, 0, 0.26),
+            inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+        backdrop-filter: blur(18px);
+    }
+
+
+    .gj-prompt {
+        padding-bottom: 24px;
+        margin-bottom: 24px;
+
+        border-bottom:
+            1px solid rgba(255, 255, 255, 0.07);
+    }
+
+
+    .gj-prompt:last-of-type {
+        padding-bottom: 0;
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+
+
+    .gj-prompt-number {
+        margin-bottom: 8px;
+
+        color: #ffe29a;
+
+        font-size: 11px;
+        font-weight: 600;
+
+        letter-spacing: 2px;
+    }
+
+
+    .gj-prompt h2 {
+        margin: 0 0 12px;
+
+        color: #f7f3ff;
+
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+
+    .gj-input {
+        display: block;
+
+        width: 100%;
+        min-height: 92px;
+
+        padding: 14px 16px;
+
+        resize: vertical;
+        outline: none;
+
+        box-sizing: border-box;
+
+        border-radius: 15px;
+
+        border:
+            1px solid rgba(255, 255, 255, 0.10);
+
+        background:
+            rgba(255, 255, 255, 0.03);
+
+        color: #ffffff;
+
+        font-family: inherit;
+        font-size: 15px;
+        line-height: 1.55;
+
+        transition: 0.25s ease;
+    }
+
+
+    .gj-input::placeholder {
+        color: rgba(255, 255, 255, 0.30);
+    }
+
+
+    .gj-input:focus {
+        border-color:
+            rgba(255, 225, 130, 0.45);
+
+        background:
+            rgba(255, 225, 130, 0.035);
+
+        box-shadow:
+            0 0 0 4px rgba(255, 225, 130, 0.035),
+            0 0 25px rgba(255, 215, 110, 0.06);
+    }
+
+
+    /* =========================================
+       SAVE BUTTON
+    ========================================= */
+
+    .gj-save-section {
+        display: flex;
+        justify-content: center;
+
+        margin-top: 28px;
+    }
+
+
+    .gj-save-btn {
+        min-width: 235px;
+
+        padding: 15px 28px;
+
+        border: none;
+        border-radius: 100px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #9a75e8,
+                #7254c7
+            );
+
+        color: #ffffff;
+
+        font-family: inherit;
+
+        font-size: 15px;
+        font-weight: 500;
+
+        cursor: pointer;
+
+        box-shadow:
+            0 14px 32px rgba(95, 65, 190, 0.28);
+
+        transition: 0.25s ease;
+    }
+
+
+    .gj-save-btn:hover {
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 18px 42px rgba(95, 65, 190, 0.40);
+    }
+
+
+    .gj-save-btn span {
+        margin-left: 8px;
+        color: #fff0b5;
+    }
+
+
+    /* =========================================
+       SUCCESS MESSAGE
+    ========================================= */
+
+    .gj-success {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+
+        margin-top: 22px;
+        padding: 16px 18px;
+
+        border-radius: 16px;
+
+        background:
+            rgba(255, 226, 135, 0.08);
+
+        border:
+            1px solid rgba(255, 226, 135, 0.20);
+
+        animation:
+            gjAppear 0.5s ease;
+    }
+
+
+    .gj-success-icon {
+        flex-shrink: 0;
+
+        color: #ffe69a;
+        font-size: 21px;
+    }
+
+
+    .gj-success p {
+        margin: 0;
+
+        color: rgba(255, 238, 190, 0.90);
+
+        font-size: 14px;
+        line-height: 1.6;
+
+        text-align: center;
+    }
+
+
+    /* =========================================
+       FOOTER NOTE
+    ========================================= */
+
+    .gj-magic-note {
+        margin: 22px 0 0;
+
+        text-align: center;
+
+        color: rgba(255, 232, 170, 0.45);
+
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+
+    .gj-magic-note span {
+        margin: 0 5px;
+
+        color: rgba(255, 222, 125, 0.75);
+    }
+
+
+    /* =========================================
+       ANIMATIONS
+    ========================================= */
+
+    @keyframes gjFloat {
+
+        0%,
+        100% {
+            transform: translateY(0);
+            opacity: 0.65;
+        }
+
+        50% {
+            transform: translateY(-10px);
+            opacity: 1;
+        }
+    }
+
+
+    @keyframes gjAppear {
+
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 600px) {
+
+        .gj-page {
+            padding: 24px 14px 45px;
+        }
+
+        .gj-journal {
+            padding: 24px 17px;
+            border-radius: 22px;
+        }
+
+        .gj-header h1 {
+            font-size: 40px;
+        }
+
+        .gj-prompt h2 {
+            font-size: 18px;
+        }
+
+        .gj-input {
+            min-height: 88px;
+        }
+
+        .gj-save-btn {
+            width: 100%;
+        }
+    }
+
+</style>
+
+
+<div class="gj-sparkles">
+
+    <span class="gj-sparkle">✦</span>
+    <span class="gj-sparkle">✧</span>
+    <span class="gj-sparkle">✦</span>
+    <span class="gj-sparkle">✨</span>
+    <span class="gj-sparkle">✧</span>
+
+</div>
+
+
+<section class="gj-page">
+
+    <div class="gj-content">
+
+        <a
+            href="{{ url_for('home') }}"
+            class="gj-back-link"
+        >
+            ← Back to home
+        </a>
+
+
+        <div class="gj-header">
+
+            <div class="gj-main-star">
+                ✦
+            </div>
+
+            <p class="gj-eyebrow">
+                GRATITUDE JOURNAL
+            </p>
+
+            <h1>
+                Notice the <span>good.</span>
+            </h1>
+
+            <p class="gj-subtitle">
+                Take a quiet moment to appreciate the little
+                things, the big things, and everything in between.
+            </p>
+
+        </div>
+
+
+        <div
+            id="gratitude-date"
+            class="gj-date"
+        >
+            Today
+        </div>
+
+
+        <form
+            class="gj-journal"
+            method="POST"
+            action="{{ url_for('gratitude') }}"
+        >
+
+            <div class="gj-prompt">
+
+                <div class="gj-prompt-number">
+                    01
+                </div>
+
+                <h2>
+                    Today, I'm grateful for...
+                </h2>
+
+                <textarea
+                    name="gratitude_one"
+                    class="gj-input"
+                    placeholder="The people, moments, or little things that you're thankful for..."
+                    maxlength="500"
+                ></textarea>
+
+            </div>
+
+
+            <div class="gj-prompt">
+
+                <div class="gj-prompt-number">
+                    02
+                </div>
+
+                <h2>
+                    Something that made me smile...
+                </h2>
+
+                <textarea
+                    name="gratitude_two"
+                    class="gj-input"
+                    placeholder="A moment you want to remember..."
+                    maxlength="500"
+                ></textarea>
+
+            </div>
+
+
+            <div class="gj-prompt">
+
+                <div class="gj-prompt-number">
+                    03
+                </div>
+
+                <h2>
+                    One thing I'm looking forward to...
+                </h2>
+
+                <textarea
+                    name="gratitude_three"
+                    class="gj-input"
+                    placeholder="Something beautiful waiting ahead..."
+                    maxlength="500"
+                ></textarea>
+
+            </div>
+
+
+            <div class="gj-save-section">
+
+                <button
+                    type="submit"
+                    class="gj-save-btn"
+                >
+                    Save today's gratitude
+                    <span>✦</span>
+                </button>
+
+            </div>
+
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+                {% for category, message in messages %}
+
+                    {% if category == "gratitude-success" %}
+
+                        <div
+                            class="gj-success"
+                            id="gratitude-success"
+                        >
+
+                            <span class="gj-success-icon">
+                                ✦
+                            </span>
+
+                            <p>
+                                {{ message }}
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            {% endwith %}
+
+        </form>
+
+
+        <p class="gj-magic-note">
+
+            <span>✦</span>
+
+            Gratitude doesn't make life perfect.
+            It helps you notice what is already beautiful.
+
+            <span>✦</span>
+
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+    const gratitudeDate =
+        document.getElementById("gratitude-date");
+
+
+    if (gratitudeDate) {
+
+        const today =
+            new Date();
+
+        gratitudeDate.textContent =
+            today.toLocaleDateString(
+                "en-US",
+                {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric"
+                }
+            );
+    }
+
+
+    const gratitudeSuccess =
+        document.getElementById("gratitude-success");
+
+
+    if (gratitudeSuccess) {
+
+        setTimeout(
+            function() {
+
+                gratitudeSuccess.style.opacity = "0";
+
+                setTimeout(
+                    function() {
+                        gratitudeSuccess.remove();
+                    },
+                    400
+                );
+
+            },
+            6000
+        );
+    }
+
+</script>
+
+{% endblock %}

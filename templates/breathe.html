@@ -1,0 +1,956 @@
+{% extends "base.html" %}
+
+{% block title %}Lumora — Breathe{% endblock %}
+
+{% block content %}
+
+<section class="breathe-page">
+
+    <!-- BACK -->
+
+    <a href="{{ url_for('home') }}"
+       class="breathe-back"
+       id="breathe-back">
+        ← Back to your space
+    </a>
+
+
+    <!-- =========================
+         SETUP SCREEN
+    ========================== -->
+
+    <div id="breathe-setup"
+         class="breathe-setup-screen">
+
+        <div class="breathe-setup-content">
+
+            <div class="breathe-small-star">
+                ✦
+            </div>
+
+            <p class="cosmic-eyebrow">
+                YOUR BREATHING SPACE
+            </p>
+
+            <h1>
+                Take a moment<br>
+                to breathe.
+            </h1>
+
+            <p class="breathe-subtitle">
+                Choose how long you'd like to pause.
+                <br>
+                We'll guide the rest.
+            </p>
+
+
+            <!-- DURATION -->
+
+            <div class="breathe-section">
+
+                <p class="breathe-section-label">
+                    HOW LONG?
+                </p>
+
+                <div class="duration-options">
+
+                    <button class="duration-option"
+                            data-duration="60">
+                        <strong>1</strong>
+                        <span>min</span>
+                    </button>
+
+                    <button class="duration-option active"
+                            data-duration="180">
+                        <strong>3</strong>
+                        <span>min</span>
+                    </button>
+
+                    <button class="duration-option"
+                            data-duration="300">
+                        <strong>5</strong>
+                        <span>min</span>
+                    </button>
+
+                    <button class="duration-option"
+                            data-duration="600">
+                        <strong>10</strong>
+                        <span>min</span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- BREATHING STYLE -->
+
+            <div class="breathe-section">
+
+                <p class="breathe-section-label">
+                    CHOOSE YOUR RHYTHM
+                </p>
+
+
+                <!-- CALM -->
+
+                <button class="breathing-style active"
+                        data-style="calm">
+
+                    <div class="breathing-style-icon">
+                        🌊
+                    </div>
+
+                    <div class="breathing-style-text">
+
+                        <h3>Calm</h3>
+
+                        <p>
+                            Inhale 4s · Exhale 6s
+                        </p>
+
+                        <span>
+                            Slow down and soften.
+                        </span>
+
+                    </div>
+
+                </button>
+
+
+                <!-- BALANCED -->
+
+                <button class="breathing-style"
+                        data-style="balanced">
+
+                    <div class="breathing-style-icon">
+                        ✨
+                    </div>
+
+                    <div class="breathing-style-text">
+
+                        <h3>Balanced</h3>
+
+                        <p>
+                            Inhale 4s · Hold 4s · Exhale 4s
+                        </p>
+
+                        <span>
+                            Find a steady rhythm.
+                        </span>
+
+                    </div>
+
+                </button>
+
+
+                <!-- DEEP -->
+
+                <button class="breathing-style"
+                        data-style="deep">
+
+                    <div class="breathing-style-icon">
+                        🌙
+                    </div>
+
+                    <div class="breathing-style-text">
+
+                        <h3>Deep</h3>
+
+                        <p>
+                            Inhale 4s · Hold 4s · Exhale 6s
+                        </p>
+
+                        <span>
+                            Settle a little deeper.
+                        </span>
+
+                    </div>
+
+                </button>
+
+            </div>
+
+
+            <!-- BEGIN -->
+
+            <button id="begin-breathing"
+                    class="breathe-begin-button">
+
+                Begin breathing
+                <span>→</span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         BREATHING EXPERIENCE
+    ========================== -->
+
+    <div id="breathe-session"
+         class="breathe-session"
+         style="display: none;">
+
+
+        <!-- TOP -->
+
+        <div class="breathe-session-top">
+
+            <div class="breathe-session-label">
+                <span class="session-star">✦</span>
+                BREATHING
+            </div>
+
+            <div id="breathe-timer"
+                 class="breathe-timer">
+                03:00
+            </div>
+
+        </div>
+
+
+        <!-- MAIN BREATHING AREA -->
+
+        <div class="breathing-experience">
+
+
+            <!-- STAR GUIDE -->
+
+            <div class="breath-star-track">
+
+                <div id="moving-breath-star"
+                     class="moving-breath-star">
+                    ✦
+                </div>
+
+            </div>
+
+
+            <!-- BREATH CIRCLE -->
+
+            <div id="breath-circle"
+                 class="breath-circle">
+
+                <div class="breath-circle-glow"></div>
+
+                <div class="breath-circle-inner">
+
+                    <p id="breath-phase"
+                       class="breath-phase">
+                        Get ready
+                    </p>
+
+                    <div id="breath-count"
+                         class="breath-count">
+                        3
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- INSTRUCTION -->
+
+            <p id="breath-instruction"
+               class="breath-instruction">
+
+                Let your shoulders soften.
+
+            </p>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+
+        <div class="breathe-controls">
+
+            <button id="pause-breathing"
+                    class="breathe-pause-button">
+
+                <span>Ⅱ</span>
+                Pause
+
+            </button>
+
+
+            <button id="end-breathing"
+                    class="breathe-end-button">
+
+                End session
+
+            </button>
+
+        </div>
+
+
+        <p class="breathe-session-note">
+            Follow the movement. There is nothing else you need to do.
+        </p>
+
+    </div>
+
+
+
+    <!-- =========================
+         COMPLETION SCREEN
+    ========================== -->
+
+    <div id="breathe-complete"
+         class="breathe-complete"
+         style="display: none;">
+
+        <div class="complete-content">
+
+            <div class="complete-stars">
+                ✦ ✧ ✦
+            </div>
+
+            <p class="cosmic-eyebrow">
+                YOU DID IT
+            </p>
+
+            <h1>
+                You gave yourself<br>
+                a moment.
+            </h1>
+
+            <p id="complete-message"
+               class="complete-message">
+
+                You completed your breathing session.
+
+            </p>
+
+
+            <div class="complete-actions">
+
+                <button id="breathe-again"
+                        class="breathe-begin-button">
+
+                    Breathe again
+                    <span>↻</span>
+
+                </button>
+
+
+                <a href="{{ url_for('home') }}"
+                   class="return-home-button">
+
+                    Return to your space
+                    <span>→</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const setupScreen =
+    document.getElementById("breathe-setup");
+
+const sessionScreen =
+    document.getElementById("breathe-session");
+
+const completeScreen =
+    document.getElementById("breathe-complete");
+
+const backButton =
+    document.getElementById("breathe-back");
+
+const beginButton =
+    document.getElementById("begin-breathing");
+
+const pauseButton =
+    document.getElementById("pause-breathing");
+
+const endButton =
+    document.getElementById("end-breathing");
+
+const breatheAgainButton =
+    document.getElementById("breathe-again");
+
+const breathCircle =
+    document.getElementById("breath-circle");
+
+const breathPhase =
+    document.getElementById("breath-phase");
+
+const breathCount =
+    document.getElementById("breath-count");
+
+const breathInstruction =
+    document.getElementById("breath-instruction");
+
+const movingStar =
+    document.getElementById("moving-breath-star");
+
+const timerDisplay =
+    document.getElementById("breathe-timer");
+
+const completeMessage =
+    document.getElementById("complete-message");
+
+
+/* =========================================
+   STATE
+========================================= */
+
+let selectedDuration = 180;
+let selectedStyle = "calm";
+
+let remainingSeconds = 180;
+
+let sessionInterval = null;
+let phaseInterval = null;
+
+let paused = false;
+let sessionRunning = false;
+
+
+/* =========================================
+   BREATHING PATTERNS
+========================================= */
+
+const breathingPatterns = {
+
+    calm: [
+
+        {
+            name: "Breathe in",
+            duration: 4,
+            animation: "inhale",
+            instruction: "Slowly fill your lungs."
+        },
+
+        {
+            name: "Breathe out",
+            duration: 6,
+            animation: "exhale",
+            instruction: "Let everything soften."
+        }
+
+    ],
+
+
+    balanced: [
+
+        {
+            name: "Breathe in",
+            duration: 4,
+            animation: "inhale",
+            instruction: "Slowly breathe in."
+        },
+
+        {
+            name: "Hold",
+            duration: 4,
+            animation: "hold",
+            instruction: "Stay gently still."
+        },
+
+        {
+            name: "Breathe out",
+            duration: 4,
+            animation: "exhale",
+            instruction: "Slowly let the breath go."
+        }
+
+    ],
+
+
+    deep: [
+
+        {
+            name: "Breathe in",
+            duration: 4,
+            animation: "inhale",
+            instruction: "Take a deep, slow breath."
+        },
+
+        {
+            name: "Hold",
+            duration: 4,
+            animation: "hold",
+            instruction: "Rest here for a moment."
+        },
+
+        {
+            name: "Breathe out",
+            duration: 6,
+            animation: "exhale",
+            instruction: "Release slowly and completely."
+        }
+
+    ]
+
+};
+
+
+/* =========================================
+   SELECT DURATION
+========================================= */
+
+document
+    .querySelectorAll(".duration-option")
+    .forEach(function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                document
+                    .querySelectorAll(".duration-option")
+                    .forEach(function(item) {
+
+                        item.classList.remove("active");
+
+                    });
+
+                button.classList.add("active");
+
+                selectedDuration =
+                    Number(
+                        button.dataset.duration
+                    );
+
+            }
+        );
+
+    });
+
+
+/* =========================================
+   SELECT STYLE
+========================================= */
+
+document
+    .querySelectorAll(".breathing-style")
+    .forEach(function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                document
+                    .querySelectorAll(".breathing-style")
+                    .forEach(function(item) {
+
+                        item.classList.remove("active");
+
+                    });
+
+                button.classList.add("active");
+
+                selectedStyle =
+                    button.dataset.style;
+
+            }
+        );
+
+    });
+
+
+/* =========================================
+   FORMAT TIMER
+========================================= */
+
+function formatTime(seconds) {
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    const remaining =
+        seconds % 60;
+
+    return (
+        String(minutes).padStart(2, "0")
+        + ":"
+        + String(remaining).padStart(2, "0")
+    );
+
+}
+
+
+/* =========================================
+   START SESSION
+========================================= */
+
+beginButton.addEventListener(
+    "click",
+    function() {
+
+        remainingSeconds =
+            selectedDuration;
+
+        paused = false;
+        sessionRunning = true;
+
+
+        setupScreen.style.display =
+            "none";
+
+        sessionScreen.style.display =
+            "flex";
+
+        backButton.style.display =
+            "none";
+
+
+        timerDisplay.textContent =
+            formatTime(remainingSeconds);
+
+
+        startSessionTimer();
+
+        startBreathingCycle();
+
+    }
+);
+
+
+/* =========================================
+   SESSION TIMER
+========================================= */
+
+function startSessionTimer() {
+
+    clearInterval(sessionInterval);
+
+    sessionInterval =
+        setInterval(function() {
+
+            if (paused) {
+                return;
+            }
+
+            remainingSeconds--;
+
+            timerDisplay.textContent =
+                formatTime(
+                    Math.max(remainingSeconds, 0)
+                );
+
+
+            if (remainingSeconds <= 0) {
+
+                finishSession();
+
+            }
+
+        }, 1000);
+
+}
+
+
+/* =========================================
+   BREATHING CYCLE
+========================================= */
+
+function startBreathingCycle() {
+
+    const pattern =
+        breathingPatterns[selectedStyle];
+
+    let phaseIndex = 0;
+
+    runPhase(
+        pattern,
+        phaseIndex
+    );
+
+}
+
+
+function runPhase(pattern, phaseIndex) {
+
+    if (!sessionRunning) {
+        return;
+    }
+
+
+    const phase =
+        pattern[phaseIndex];
+
+
+    let secondsLeft =
+        phase.duration;
+
+
+    /* Remove previous animation */
+
+    breathCircle.className =
+        "breath-circle";
+
+    movingStar.className =
+        "moving-breath-star";
+
+
+    /* Add new animation */
+
+    breathCircle.classList.add(
+        phase.animation
+    );
+
+    movingStar.classList.add(
+        "star-" + phase.animation
+    );
+
+
+    breathPhase.textContent =
+        phase.name;
+
+    breathInstruction.textContent =
+        phase.instruction;
+
+    breathCount.textContent =
+        secondsLeft;
+
+
+    clearInterval(phaseInterval);
+
+
+    phaseInterval =
+        setInterval(function() {
+
+            if (!sessionRunning) {
+
+                clearInterval(phaseInterval);
+
+                return;
+
+            }
+
+
+            if (paused) {
+                return;
+            }
+
+
+            secondsLeft--;
+
+            breathCount.textContent =
+                secondsLeft;
+
+
+            if (secondsLeft <= 0) {
+
+                clearInterval(phaseInterval);
+
+
+                let nextPhase =
+                    phaseIndex + 1;
+
+
+                if (
+                    nextPhase >= pattern.length
+                ) {
+
+                    nextPhase = 0;
+
+                }
+
+
+                runPhase(
+                    pattern,
+                    nextPhase
+                );
+
+            }
+
+        }, 1000);
+
+}
+
+
+/* =========================================
+   PAUSE / RESUME
+========================================= */
+
+pauseButton.addEventListener(
+    "click",
+    function() {
+
+        paused =
+            !paused;
+
+
+        if (paused) {
+
+            pauseButton.innerHTML =
+                "<span>▶</span> Resume";
+
+            breathPhase.textContent =
+                "Paused";
+
+            breathInstruction.textContent =
+                "Take your time. Resume whenever you're ready.";
+
+            breathCircle.style.animationPlayState =
+                "paused";
+
+            movingStar.style.animationPlayState =
+                "paused";
+
+
+            breathCircle.querySelector(
+                ".breath-circle-glow"
+            ).style.animationPlayState =
+                "paused";
+
+        }
+
+        else {
+
+            pauseButton.innerHTML =
+                "<span>Ⅱ</span> Pause";
+
+            breathCircle.style.animationPlayState =
+                "running";
+
+            movingStar.style.animationPlayState =
+                "running";
+
+
+            breathCircle.querySelector(
+                ".breath-circle-glow"
+            ).style.animationPlayState =
+                "running";
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   END SESSION
+========================================= */
+
+endButton.addEventListener(
+    "click",
+    function() {
+
+        finishSession();
+
+    }
+);
+
+
+/* =========================================
+   FINISH SESSION
+========================================= */
+
+function finishSession() {
+
+    if (!sessionRunning) {
+        return;
+    }
+
+
+    sessionRunning = false;
+
+    paused = false;
+
+
+    clearInterval(sessionInterval);
+
+    clearInterval(phaseInterval);
+
+
+    sessionScreen.style.display =
+        "none";
+
+    completeScreen.style.display =
+        "flex";
+
+
+    const completed =
+        selectedDuration - remainingSeconds;
+
+
+    const completedMinutes =
+        Math.max(
+            1,
+            Math.round(completed / 60)
+        );
+
+
+    if (remainingSeconds <= 0) {
+
+        completeMessage.textContent =
+            "You completed " +
+            (selectedDuration / 60) +
+            " minutes of breathing. Give yourself a moment to notice how you feel.";
+
+    }
+
+    else {
+
+        completeMessage.textContent =
+            "You took " +
+            completedMinutes +
+            " minute" +
+            (completedMinutes !== 1 ? "s" : "") +
+            " to pause and breathe. That still counts.";
+
+    }
+
+}
+
+
+/* =========================================
+   BREATHE AGAIN
+========================================= */
+
+breatheAgainButton.addEventListener(
+    "click",
+    function() {
+
+        completeScreen.style.display =
+            "none";
+
+        setupScreen.style.display =
+            "flex";
+
+        backButton.style.display =
+            "inline-flex";
+
+
+        remainingSeconds =
+            selectedDuration;
+
+        breathCircle.className =
+            "breath-circle";
+
+        movingStar.className =
+            "moving-breath-star";
+
+    }
+);
+
+</script>
+
+{% endblock %}
