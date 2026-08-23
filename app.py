@@ -723,18 +723,19 @@ def manifestation():
 # VISION BOARD
 # =========================================================
 
+# =========================================================
+# VISION BOARD
+# =========================================================
+
 @app.route("/vision-board", methods=["GET", "POST"])
 def vision_board():
 
     if "user_id" not in session:
-
         return redirect(
             url_for("login")
         )
 
-
     user_id = session["user_id"]
-
 
     # -----------------------------------------------------
     # SAVE NEW VISION BOARD ITEM
@@ -762,10 +763,7 @@ def vision_board():
             ""
         ).strip()
 
-        image = request.files.get(
-            "image"
-        )
-
+        image = request.files.get("image")
 
         # Basic validation
 
@@ -780,9 +778,7 @@ def vision_board():
                 url_for("vision_board")
             )
 
-
         image_filename = None
-
 
         # -------------------------------------------------
         # SAVE IMAGE
@@ -790,9 +786,7 @@ def vision_board():
 
         if image and image.filename != "":
 
-            if allowed_file(
-                image.filename
-            ):
+            if allowed_file(image.filename):
 
                 original_filename = secure_filename(
                     image.filename
@@ -813,7 +807,6 @@ def vision_board():
 
                 image_filename = unique_filename
 
-
             else:
 
                 flash(
@@ -824,7 +817,6 @@ def vision_board():
                 return redirect(
                     url_for("vision_board")
                 )
-
 
         # -------------------------------------------------
         # CREATE VISION BOARD ITEM
@@ -839,24 +831,17 @@ def vision_board():
             image_filename=image_filename
         )
 
-
-        db.session.add(
-            new_item
-        )
-
+        db.session.add(new_item)
         db.session.commit()
-
 
         flash(
             "✨ Your vision has been added to your board!",
             "success"
         )
 
-
         return redirect(
             url_for("vision_board")
         )
-
 
     # -----------------------------------------------------
     # LOAD USER'S VISION BOARD
@@ -868,12 +853,10 @@ def vision_board():
         VisionBoardItem.created_at.desc()
     ).all()
 
-
     return render_template(
-        "visionboard.html",
+        "vision_board.html",
         items=items
     )
-
 
 # =========================
 # MY LUMORA DIARY
