@@ -858,6 +858,73 @@ def vision_board():
         items=items
     )
 
+# =========================================================
+# DELETE VISION BOARD ITEM
+# =========================================================
+
+@app.route("/vision-board/delete/<int:item_id>", methods=["POST"])
+def delete_vision_item(item_id):
+
+    # User must be logged in
+    if "user_id" not in session:
+        return redirect(
+            url_for("login")
+        )
+
+    # Get the vision item
+    item = db.session.get(
+        VisionBoardItem,
+        item_id
+    )
+
+    # Make sure the item exists
+    if not item:
+
+        flash(
+            "Vision item not found.",
+            "error"
+        )
+
+        return redirect(
+            url_for("vision_board")
+        )
+
+    # Make sure the logged-in user owns this item
+    if item.user_id != session["user_id"]:
+
+        flash(
+            "You are not allowed to delete this vision item.",
+            "error"
+        )
+
+        return redirect(
+            url_for("vision_board")
+        )
+
+    # Delete image file if it exists
+    if item.image_filename:
+
+        image_path = os.path.join(
+            app.config["UPLOAD_FOLDER"],
+            item.image_filename
+        )
+
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
+    # Delete database item
+    db.session.delete(item)
+    db.session.commit()
+
+    flash(
+        "Your vision has been removed from the board.",
+        "success"
+    )
+
+    return redirect(
+        url_for("vision_board")
+    )
+
 # =========================
 # MY LUMORA DIARY
 # =========================
